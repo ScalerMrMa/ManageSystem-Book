@@ -1,9 +1,14 @@
 package com.it.controller;
 
+import com.it.dao.BookInfoDao;
+import com.it.domain.BookInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author MrMa
@@ -14,10 +19,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/manage")
 public class ManagerController {
 
+
+    @Resource
+    BookInfoDao bookInfoDao;
+
     @GetMapping("/test")
     @ResponseBody
-    public String test() {
-        System.out.println("someone");
-        return "测试一下";
+    public List<BookInfo> test() {
+        List<BookInfo> bookInfos = bookInfoDao.selectList(null);
+        return bookInfos;
     }
 }

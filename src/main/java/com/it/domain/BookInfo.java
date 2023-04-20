@@ -1,5 +1,6 @@
 package com.it.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.util.Date;
@@ -12,8 +13,10 @@ import java.util.Date;
  */
 
 @Data
+
 public class BookInfo {
 
+    @TableField(value = "ISBN")
     private String ISBN;            // 书号
     private String bookName;        // 书名
     private String bookCategory;    // 图书类别

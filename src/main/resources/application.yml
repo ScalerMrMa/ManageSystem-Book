@@ -4,6 +4,6 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/bookmananesystem?
+    url: jdbc:mysql://localhost:3306/bookmanagesystem?
     username: root
-    password: Mcy15983044725
+    password: 15983044725
