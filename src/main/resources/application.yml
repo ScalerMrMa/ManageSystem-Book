@@ -1,0 +1,9 @@
+server:
+  port: 8080    # \u7AEF\u53E3\u53F7\u4E3A8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/bookmananesystem?
+    username: root
+    password: Mcy15983044725
