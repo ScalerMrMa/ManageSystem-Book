@@ -1,5 +1,5 @@
 server:
-  port: 8080    # \u7AEF\u53E3\u53F7\u4E3A8080
+  port: 8080    # 端口号
 
 spring:
   datasource:
@@ -7,3 +7,8 @@ spring:
     url: jdbc:mysql://localhost:3306/bookmanagesystem?
     username: root
     password: 15983044725
+# 配置日志
+logging:
+  pattern:
+    level:
+      com.it.dao : debug

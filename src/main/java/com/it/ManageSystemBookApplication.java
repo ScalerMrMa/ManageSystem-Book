@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan("com.it.dao")
+//@EnableTransactionManagement
 public class ManageSystemBookApplication {
 
     public static void main(String[] args) {

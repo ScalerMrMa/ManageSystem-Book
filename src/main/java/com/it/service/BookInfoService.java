@@ -5,5 +5,5 @@ package com.it.service;
  * @version 1.0
  * @description
  */
-public interface BookInfoService {
+public interface BookInfoService{
 }
