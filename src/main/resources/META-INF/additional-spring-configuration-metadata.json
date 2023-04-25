@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "spring.datasource.thymeleaf",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.thymeleaf."
+    },
+    {
+      "name": "spring.datasource.prefix.suffix",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.prefix.suffix."
+    }
+  ] }

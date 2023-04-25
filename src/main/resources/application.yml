@@ -7,6 +7,18 @@ spring:
     url: jdbc:mysql://localhost:3306/bookmanagesystem?
     username: root
     password: 15983044725
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    mode: HTML
+# 为什么使用Thymeleaf
+##  使用Spring Boot时，通常使用模板引擎（如Thymeleaf、Freemarker等）来生成HTML页面，然后在控制器中使用视图解析器将这些页面渲染并返回给客户端。
+## 当使用@Controller注解时，Spring会使用视图解析器解析返回的字符串并在模板引擎中查找相应的模板，最终生成HTML页面并返回给客户端。
+## 而@RestController注解不会进行此类解析，而是将返回的数据直接作为HTTP响应的主体返回给客户端。
+## 当您在@RestController注解的控制器中执行重定向操作时，由于您不会返回模板名称，因此需要确保模板引擎和视图解析器正确配置，
+##  以便正确生成重定向目标页面的HTML。如果未正确配置视图解析器和模板引擎，则可能会导致重定向到错误的页面或生成不完整的HTML页面。
+## 因此，为了正确重定向到另一个页面并显示正确的内容，需要在@RestController控制器中正确配置视图解析器和模板引擎
 # 配置日志
 logging:
   pattern:

@@ -27,6 +27,7 @@ public class ManagerController {
     @ResponseBody
     public List<BookInfo> test() {
         List<BookInfo> bookInfos = bookInfoDao.selectList(null);
+        System.out.println("图书信息");
         return bookInfos;
     }
 }
