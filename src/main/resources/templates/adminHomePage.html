@@ -56,14 +56,14 @@
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
                 <li class="layui-nav-item">
                     <!--通过target和iframe的name实现页面跳转-->
-                    <a th:href="@{/admin/component/homepage.html}" target="main_self_frame">首页</a>
+                    <a th:href="@{/homepage}" target="main_self_frame">首页</a>
                 </li>
 
                 <li class="layui-nav-item layui-nav-itemed">
                     <a href="javascript:;">图书信息管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="./admin/component/bookInfoManage.html" target="main_self_frame">书籍管理</a></dd>
-                        <dd><a href="admin/component/bookCategory.html" target="main_self_frame">分类管理</a></dd>
+                        <dd><a th:href="@{/bookInfoManage}" target="main_self_frame">书籍管理</a></dd>
+                        <dd><a th:href="@{/bookCategory}" target="main_self_frame">分类管理</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">
@@ -81,7 +81,7 @@
 
     <div class="layui-body">
         <!-- 内容主体区域 -->
-        <iframe src="./admin/component/bookInfoManage.html" frameborder="0" name="main_self_frame" width="100%" height="100%">
+        <iframe th:href="@{/homepage}" frameborder="0" name="main_self_frame" width="100%" height="100%">
 
         </iframe>
     </div>
