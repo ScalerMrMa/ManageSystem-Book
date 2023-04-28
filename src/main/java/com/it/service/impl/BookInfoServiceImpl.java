@@ -27,7 +27,7 @@ public class BookInfoServiceImpl implements BookInfoService {
         bookInfoDataVo.setMsg("");
         Integer count = bookInfoDao.selectCount(null);
         bookInfoDataVo.setCount(count);
-
+        System.out.println(count);
         // 查询所有的数据
         List<BookInfo> bookInfoList = bookInfoDao.selectList(null);
         bookInfoDataVo.setData(bookInfoList);

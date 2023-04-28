@@ -13,5 +13,5 @@ import lombok.Data;
 @Data
 public class BookCategory {
     private String bookCategory;    // 图书类别
-    private String ISBN;            // 图书国际书号
+    private String isbn;            // 图书国际书号
 }

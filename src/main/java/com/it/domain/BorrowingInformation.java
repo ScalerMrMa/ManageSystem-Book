@@ -11,7 +11,7 @@ import lombok.Data;
 public class BorrowingInformation {
     private String readerId;        // 读者的身份Id
     private String readerName;      // 读者的名字
-    private String ISBN;            // 书号
+    private String isbn;            // 书号
     private String bookName;        // 书名
     private String loanDate;        // 借阅时间
     private String returnDate;      // 归还日期

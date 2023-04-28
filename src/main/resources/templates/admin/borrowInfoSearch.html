@@ -1,10 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>借阅信息查询</title>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"   media="all">
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
 <body>
-<h1>借阅信息查询</h1>
+
+<div class="demoTable">
+    &nbsp;&nbsp;&nbsp;&nbsp;搜索ID：
+    <div class="layui-inline">
+        <input class="layui-input" name="id" id="demoReload" autocomplete="off">
+    </div>
+    <button class="layui-btn" data-type="reload">搜索</button>
+</div>
+
+<table class="layui-hide" id="borrow_info" lay-filter="test"></table>
+
+
+<script th:src="@{/layui/layui.js}" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+
+        //方法级渲染
+        table.render({
+            elem: '#borrow_info'
+            ,url: '/manage/borrowInfoSearch'
+            ,cols: [
+                [
+                {checkbox: true, fixed: true}
+                ,{field:'readerId', title: '用户ID', width:200, sort: true, fixed: true}
+                ,{field:'readerName', title: '用户名', width:200}
+                ,{field:'isbn', title: 'ISBN', width:200, sort: true}
+                ,{field:'bookName', title: '书名', width:200}
+                ,{field:'loanDate', title: '借阅日期',width: 200}
+                ,{field:'returnDate', title: '归还日期', sort: true, width:200}
+
+            ]
+            ]
+            ,id: 'testReload'
+            ,page: true
+            ,height: 310
+        });
+
+        var $ = layui.$, active = {
+            reload: function(){
+                var demoReload = $('#demoReload');
+
+                //执行重载
+                table.reload('testReload', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        key: {
+                            id: demoReload.val()
+                        }
+                    }
+                });
+            }
+        };
+
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+
 </body>
 </html>

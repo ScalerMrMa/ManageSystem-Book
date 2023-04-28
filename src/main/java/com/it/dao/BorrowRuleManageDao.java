@@ -1,7 +1,7 @@
 package com.it.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.it.domain.BookCategory;
+import com.it.domain.BorrowRuleManage;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @version 1.0
  * @description
  */
+
 @Mapper
-public interface BookCategoryDao extends BaseMapper<BookCategory> {
+public interface BorrowRuleManageDao extends BaseMapper<BorrowRuleManage> {
 }

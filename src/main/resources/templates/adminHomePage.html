@@ -69,12 +69,13 @@
                 <li class="layui-nav-item">
                     <a href="javascript:;">图书借阅管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="./admin/component/borrowInfoSearch.html" target="main_self_frame">借阅信息查询</a></dd>
-                        <dd><a href="./admin/component/borrowRuleSearch.html" target="main_self_frame">借阅规则查询</a></dd>
+                        <dd><a th:href="@{/borrowInfoSearch}" target="main_self_frame">借阅信息查询</a></dd>
+                        <dd><a th:href="@{/borrowRuleManage}" target="main_self_frame">借阅规则管理</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a href="./admin/component/librarian.html" target="main_self_frame">图书管理员查询</a></li>
-                <li class="layui-nav-item"><a href="./admin/component/LibraryInfoStatistics.html" target="main_self_frame">图书信息统计</a></li>
+                <li class="layui-nav-item"><a th:href="@{/borrowInfoSearch}" target="main_self_frame">图书管理员查询</a></li>
+                <li class="layui-nav-item"><a th:href="@{/borrowInfoSearch}" target="main_self_frame">图书信息统计</a></li>
+                <li class="layui-nav-item"><a th:href="@{/announcement}" target="main_self_frame">公告模块管理</a></li>
             </ul>
         </div>
     </div>

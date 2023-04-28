@@ -13,27 +13,82 @@
 
 <table class="layui-hide" id="bookInfo" lay-filter="test"></table>
 
-<script type="text/html" id="toolbarDemo">
-    <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
-        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
-    </div>
-</script>
-
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 
+<!--表单-->
+<script type="text/html" id="edit_form">
+    <div class="layui-col-md10" style="margin-left: 35px; margin-top: 20px">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">书名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="bookName" required lay-verify="required" placeholder="请输入书名" autoComplete="on"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">类别</label>
+                <div class="layui-input-block">
+                    <input type="text" name="bookCategory" required lay-verify="required" placeholder="请输入类别"
+                           autoComplete="on" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">作者</label>
+                <div class="layui-input-block">
+                    <input type="text" name="author" required lay-verify="required" placeholder="请输入作者"
+                           autoComplete="on" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">出版社</label>
+                <div class="layui-input-block">
+                    <input type="text" name="publisher" required lay-verify="required" placeholder="请输入出版社" autoComplete="on"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">出版日期</label>
+                <div class="layui-input-block">
+                    <input type="date" name="publicationDate" required lay-verify="required"  autoComplete="on"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">登记日期</label>
+                <div class="layui-input-block">
+                    <input type="date" name="registrationDate" required lay-verify="required"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">描述</label>
+                <div class="layui-input-block">
+                    <textarea name="bookInfomation" placeholder="请输入内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="text-align: center">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
 
 <script th:src="@{/layui/layui.js}" charset="utf-8"></script>
+
 <!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
 
 <script>
-    layui.use('table', function(){
-        var table = layui.table;
-
+    layui.use(['table','form','jquery','layer'], function(){
+        var layer = layui.layer
+            ,$ = layui.jquery,form = layui.form,table = layui.table;
         table.render({
             elem: '#bookInfo'
             ,url: '/manage/bookList'
@@ -47,7 +102,7 @@
             ,cols: [
                 [
                 {type: 'checkbox', fixed: 'left'}
-                ,{field:'isbn', title:'ISBN', width:120, edit: 'text'}
+                ,{field:'isbn', title:'ISBN', width:120}
                 ,{field:'bookName', title:'书名', width:120, edit: 'text'}
                 ,{field:'bookCategory', title:'类别', width:150, edit: 'text'}
                 ,{field:'author', title:'作者', width:80, edit: 'text', sort: true}
@@ -59,6 +114,18 @@
             ]
             ]
             ,page: true
+            ,limit:10
+            ,parseData: function (res) {
+                var result;
+                console.log(this);
+                console.log(JSON.stringify(res));
+                if (this.page.curr) {
+                    result = res.data.slice(this.limit * (this.page.curr - 1), this.limit * this.page.curr);
+                } else {
+                    result = res.data.slice(0, this.limit);
+                }
+                return {"code": res.code, "msg": res.msg, "count": res.count, "data": result};
+            }
         });
 
         //头工具栏事件
@@ -79,7 +146,7 @@
 
                 //自定义头工具栏右侧图标 - 提示
                 case 'LAYTABLE_TIPS':
-                    layer.alert('这是工具栏右侧自定义的一个图标按钮');
+                    layer.alert('我还没有想好说什么咯！');
                     break;
             };
         });
@@ -94,15 +161,37 @@
                     layer.close(index);
                 });
             } else if(obj.event === 'edit'){
-                layer.prompt({
-                    formType: 2
-                    ,value: data.email
-                }, function(value, index){
-                    obj.update({
-                        email: value
-                    });
-                    layer.close(index);
-                });
+                // 弹出表单进行修改
+                layer.open({
+                    title: "修改书籍信息",
+                    type:1,
+                    area: ['660px','550px'],
+                    content: $('#edit_form').html()
+                })
+
+                // 更新渲染表单
+                form.render()
+                form.val('edit_form', {
+                    // 赋值
+                   "bookName":obj.data.bookName,
+                   "bookCategory":obj.data.bookCategory,
+                   "author":obj.data.author,
+                   "publisher":obj.data.publisher,
+                   "bookInformation":obj.bookInformation,
+                   "publicationDate":ob.publicationDate,
+                   "registrationDate":obj.registrationDate
+                })
+                // 表单数据回显
+                form.success()
+                // 提交表单
+                form.on('submit(formDemo', function (message) {
+                    console.log(message.field);
+                    console.log(obj.date);
+                    $.ajax({
+                        url:":url"
+                    })
+
+                })
             }
         });
     });

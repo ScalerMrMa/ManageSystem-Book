@@ -38,10 +38,39 @@ public class TransitController {
         return "admin/bookInfoManage";
     }
 
+    /**
+     * 访问templates下的bookCategory.html文件
+     * @return
+     */
     @GetMapping("bookCategory")
     public String toBookCategory() {
         return "admin/bookCategory";
     }
 
+    /**
+     * 图书借阅信息查询
+     * @return
+     */
+    @GetMapping("borrowInfoSearch")
+    public String toBorrowInfo() {
+        return "admin/borrowInfoSearch";
+    }
 
+    /**
+     * 借阅规则管理
+     * @return
+     */
+    @GetMapping("borrowRuleManage")
+    public String toBorrowRuleManage() {
+        return "admin/borrowRuleManage";
+    }
+
+    /**
+     * 公告模块管理
+     * @return
+     */
+    @GetMapping("announcement")
+    public String toAnnoncement() {
+        return "admin/announcement";
+    }
 }

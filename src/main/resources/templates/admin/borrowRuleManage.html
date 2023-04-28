@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"   media="all">
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>
+
+
+<table class="layui-hide" id="borrow_rule" lay-filter="test"></table>
+
+
+<script th:src="@{/layui/layui.js}" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+
+        //方法级渲染
+        table.render({
+            elem: '#borrow_rule'
+            ,url: '/manage/borrowRuleManage'
+            ,cols: [
+                [
+                    {checkbox: true, fixed: true}
+                    ,{field:'number', title: '序列号', width:250, sort: true, fixed: true}
+                    ,{field:'publisher', title: '发布者', width:250}
+                    ,{field:'borrowRules', title: '借阅规则', width:250, sort: true}
+                    ,{field:'publishDate', title: '发布时间', width:250}
+
+                ]
+            ]
+            ,page: true
+            ,height: 310
+        });
+
+    });
+</script>
+
+</body>
+</html>
