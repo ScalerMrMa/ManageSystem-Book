@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 /**
@@ -106,20 +108,64 @@ public class ManageController {
     // ----------------------------------删除专区-----------------------------
 
 
-    @RequestMapping(value = "/deleteBookInfo", method = RequestMethod.DELETE)
-    @CrossOrigin(origins = "*")
-    public ResultVo deleteBookInfo(@RequestBody BookInfo bookInfo) {
-
-        return null;
+    /**
+     * 删除图书信息
+     * @param isbn
+     * @return
+     */
+    @RequestMapping( "/deleteBookInfo")
+    @ResponseBody
+    public ResultVo deleteBookInfo(String isbn) {
+        System.out.println(isbn);
+        BookInfo bookInfo = new BookInfo();
+        bookInfo.setIsbn(isbn);
+        return bookInfoService.deleteBookInfo(bookInfo);
     }
 
+    @RequestMapping("/deleteAllBookInfo")
+    @ResponseBody
+    public ResultVo deleteAllBookInfo(@RequestParam("isbn") List<String> isbns) {
+        return bookInfoService.deleteAllBookInfo(isbns);
+    }
+
+    /**
+     * 单个删除图书类别
+     * @param isbn
+     * @return
+     */
     @RequestMapping("/deleteBookCategory")
     @ResponseBody
-    public ResultVo deleteBokCategory(String isbn) {
+    public ResultVo deleteBookCategory(String isbn) {
         System.out.println(isbn);
         BookCategory bookCategory = new BookCategory();
         bookCategory.setIsbn(isbn);
 
         return bookCategoryService.deleteBookCategory(bookCategory);
+    }
+
+    /**
+     * 批量删除图书类别
+     * @param isbns
+     * @return
+     */
+    @RequestMapping("/deleteAllBokkCategory")
+    @ResponseBody
+    public ResultVo deleteAllBookCategory(@RequestParam("isbn") List<String> isbns) {
+        return bookCategoryService.deleteAllBookCategory(isbns);
+    }
+
+    // ------------------------------------修改专区---------------------------------------
+
+
+    /**
+     * 修改图书类别
+     * @param bookCategory
+     * @return
+     */
+    @RequestMapping("/updateCategory")
+    @ResponseBody
+    public ResultVo updateBookCategory(BookCategory bookCategory) {
+        System.out.println(bookCategory);
+        return bookCategoryService.updateBookCategory(bookCategory);
     }
 }

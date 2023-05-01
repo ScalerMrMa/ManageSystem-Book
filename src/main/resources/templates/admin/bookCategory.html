@@ -53,16 +53,10 @@
 </script>
 
 <!--编辑表单-->
-<script type="text/html" id="edit-category">
+<script type="text/html" id="edit-category" style="display: none">
     <div class="layui-col-md10" style="margin-left: 35px; margin-top: 20px">
-        <form class="layui-form" action="">
-            <div class="layui-form-item">
-                <label class="layui-form-label">isbn</label>
-                <div class="layui-input-block">
-                    <input type="text" name="isbn" required lay-verify="required" placeholder="请输入书号"
-                           autoComplete="on" class="layui-input">
-                </div>
-            </div>
+        <form class="layui-form" action="" filter="editForm">
+
             <div class="layui-form-item">
                 <label class="layui-form-label">类别</label>
                 <div class="layui-input-block">
@@ -72,7 +66,7 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-input-block" style="text-align: center">
-                    <button class="layui-btn" lay-submit lay-filter="addCategory">立即提交</button>
+                    <button class="layui-btn" lay-submit lay-filter="editCategory">立即提交</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                 </div>
             </div>
@@ -138,17 +132,43 @@
                     $(".delAll_btn").click(function () {
                         var checkStatus = table.checkStatus('bookCategory'),
                             data = checkStatus.data,
-                            userId = "";
+
+                            bookIsbn = "";
+
                         if (data.length > 0) {
                             for (var i in data) {
-                                userId += data[i].id + ",";
+                                bookIsbn += data[i].isbn + ",";
                             }
-                            console.log(userId);
                             layer.confirm('确定删除选中的用户？', {icon: 3, title: '提示信息'}, function (index) {
-                                $.post('', {ids: userId}, function (data) {
-                                    layer.msg(data.msg);
-                                    tableIns.reload();
-                                    layer.close(index);
+                                $.ajax({
+                                    url: 'manage/deleteAllBokkCategory',
+                                    type: 'DELETE',
+                                    data: {
+                                        isbn: bookIsbn
+                                    },
+                                    success: function(resultVo) {
+                                        console.log(data)
+                                        layer.msg(resultVo.msg,{
+                                            icon: 1,
+                                            time: 1000,
+                                        },function (){
+                                            parent.location.reload();
+                                        });
+                                        // tableIns.reload();
+                                        layer.close(index);
+                                    },
+                                    error: function (resultVo) {
+                                        console.log(data)
+                                        layer.msg(resultVo.msg,{
+                                            icon: 1,
+                                            time: 1000,
+                                        },function (){
+                                            parent.location.reload();
+                                        });
+                                        // tableIns.reload();
+                                        layer.close(index);
+                                    }
+
                                 });
                             })
                         } else {
@@ -177,30 +197,42 @@
                             isbn: obj.data.isbn
                         },
                         success: function(resultVo) {
-                            console.log(data)
+                            console.log(resultVo)
                             layer.msg(resultVo.msg,{
                                 icon: 1,
                                 time: 1000,
                             },function (){
                                 parent.location.reload();
                             });
-                            tableIns.reload();
+                            layer.close(index);
+                        },
+                        error: function (resultVo) {
+                            layer.msg(resultVo.msg,{
+                                icon: 2,
+                                time: 1000,
+                            },function (){
+                                parent.location.reload();
+                            });
                             layer.close(index);
                         }
+
                     });
                 });
             } else if(obj.event === 'edit'){
                 layer.open({
-                    title:"编辑图书类别",
-                    type:1,
-                    area:['440px','330px'],
-                    content:$('#edit-category').html()
-                })
+                    title: '编辑图书类别',
+                    type: 1,
+                    area: ['440px', '330px'],
+                    content: $('#edit-category').html(), // 将表单 HTML 代码作为弹出层的内容
+
+                });
+
             }
         });
 
         // 新增图书类别
         form.on('submit(addCategory)', function (data) {
+
             $.post("manage/insertBookCategory", data.field, function (resultVo) {
                 layer.msg(resultVo.msg,{
                     icon: 1,
@@ -209,7 +241,26 @@
                     // 一秒以后进行页面重新刷新
                     parent.location.reload();
                 });
-            })
+            }).fail(function() {
+                layer.alert('添加失败!', {icon: 2});
+            });
+            // 阻止form表单提示
+            return false;
+        })
+
+        // 修改图书类别
+        form.on('submit(editCategory)',function (obj) {
+            $.post("manage/updateCategory", obj.data.field, function (resultVo) {
+                layer.msg(resultVo.msg,{
+                    icon: 1,
+                    time: 1000  // 1秒关闭
+                }, function (){
+                    // 一秒以后进行页面重新刷新
+                    parent.location.reload();
+                });
+            }).fail(function() {
+                layer.alert('修改失败!', {icon: 2});
+            });
             // 阻止form表单提示
             return false;
         })

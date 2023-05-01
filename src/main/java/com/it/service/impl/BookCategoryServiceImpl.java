@@ -1,5 +1,6 @@
 package com.it.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.it.dao.BookCategoryDao;
 import com.it.domain.BookCategory;
@@ -89,4 +90,41 @@ public class BookCategoryServiceImpl implements BookCategoryService {
     }
 
 
+    /**
+     * 批量删除图书类别
+     */
+    public ResultVo deleteAllBookCategory(List<String> isbns) {
+        LambdaQueryWrapper<BookCategory> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(BookCategory::getIsbn, isbns);
+        int delete = bookCategoryDao.delete(lambdaQueryWrapper);
+        ResultVo resultVo = new ResultVo();
+
+        if (delete != 0) {
+            resultVo.setCode(0);
+            resultVo.setMsg("删除成功！");
+            return resultVo;
+        }else {
+            resultVo.setCode(1);
+            resultVo.setMsg("删除失败！");
+            return resultVo;
+        }
+    }
+
+
+    @Override
+    public ResultVo updateBookCategory(BookCategory bookCategory) {
+        QueryWrapper<BookCategory> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("isbn", bookCategory.getIsbn());
+        int update = bookCategoryDao.update(bookCategory, queryWrapper);
+        ResultVo resultVo = new ResultVo();
+        if (update != 0) {
+            resultVo.setCode(0);
+            resultVo.setMsg("修改成功！");
+            return resultVo;
+        }else {
+            resultVo.setCode(1);
+            resultVo.setMsg("修改失败！");
+            return resultVo;
+        }
+    }
 }
