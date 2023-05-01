@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑表单</title>
+</head>
+<body>
+<!--编辑表单-->
+<script th:src="@{/layui/layui.js}" type="text/html" id="edit-form">
+    <div class="layui-col-md10" style="margin-left: 35px; margin-top: 20px">
+        <form class="layui-form" action="" lay-filter="editForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label">书名</label>
+                <div class="layui-input-block">
+                    <input id="bookNameId" type="text" name="bookName" required lay-verify="required" placeholder="请输入书名" autoComplete="on"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">类别</label>
+                <div class="layui-input-block">
+                    <input id="bookCategoryId" type="text" name="bookCategory" required lay-verify="required" placeholder="请输入类别"
+                           autoComplete="on" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">作者</label>
+                <div class="layui-input-block">
+                    <input id="authorId" type="text" name="author" required lay-verify="required" placeholder="请输入作者"
+                           autoComplete="on" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">出版社</label>
+                <div class="layui-input-block">
+                    <input id="publisherId" type="text" name="publisher" required lay-verify="required" placeholder="请输入出版社" autoComplete="on"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">出版日期</label>
+                <div class="layui-input-block">
+                    <input id="publicationDateId" type="date" name="publicationDate" required lay-verify="required"  autoComplete="on"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">登记日期</label>
+                <div class="layui-input-block">
+                    <input id="registrationDateId" type="date" name="registrationDate" required lay-verify="required"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">描述</label>
+                <div class="layui-input-block">
+                    <textarea id="bookInformationId" name="bookInfomation" placeholder="请输入内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+</body>
+</html>

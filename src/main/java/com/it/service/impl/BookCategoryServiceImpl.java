@@ -1,9 +1,11 @@
 package com.it.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.it.dao.BookCategoryDao;
 import com.it.domain.BookCategory;
 import com.it.service.BookCategoryService;
 import com.it.vo.DataVo;
+import com.it.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,4 +43,50 @@ public class BookCategoryServiceImpl implements BookCategoryService {
         bookCategoryVo.setData(bookCategories);
         return bookCategoryVo;
     }
+
+    /**
+     * 新增图书类别
+     * @return
+     */
+    @Override
+    public ResultVo insertBookCategory(BookCategory bookCategory) {
+        int check = bookCategoryDao.insert(bookCategory);
+        if (check == 0) {
+            ResultVo resultVo = new ResultVo();
+            resultVo.setCode(1);
+            resultVo.setMsg("添加失败！");
+            return resultVo;
+        }else {
+            ResultVo resultVo = new ResultVo();
+            resultVo.setCode(0);
+            resultVo.setMsg("添加成功！");
+            return resultVo;
+        }
+    }
+
+    /**
+     * 删除图书类别
+     * @param bookCategory
+     * @return
+     */
+    @Override
+    public ResultVo deleteBookCategory(BookCategory bookCategory) {
+        QueryWrapper<BookCategory> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("isbn", bookCategory.getIsbn());
+        int delete = bookCategoryDao.delete(queryWrapper);
+        // 创建ResultVo
+
+        ResultVo resultVo = new ResultVo();
+        if (delete == 1) {
+            resultVo.setCode(0);
+            resultVo.setMsg("删除成功！");
+            return resultVo;
+        }else {
+            resultVo.setCode(1);
+            resultVo.setMsg("删除失败！");
+            return resultVo;
+        }
+    }
+
+
 }

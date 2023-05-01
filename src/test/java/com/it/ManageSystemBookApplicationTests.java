@@ -2,6 +2,7 @@ package com.it;
 
 import com.it.dao.BookInfoDao;
 import com.it.domain.BookInfo;
+import com.it.service.BookInfoService;
 import com.it.service.BorrowInfoService;
 import com.it.service.BorrowRuleManageService;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,9 @@ class ManageSystemBookApplicationTests {
 
     @Autowired
     BookInfoDao bookInfoDao;
+
+    @Autowired
+    BookInfoService bookInfoService;
 
     @Autowired
     BorrowInfoService borrowInfoService;
@@ -47,5 +51,15 @@ class ManageSystemBookApplicationTests {
     @Test
     public void  getBorrowRules() {
         System.out.println(borrowRuleManageService.getBorrowRuleManage());
+    }
+
+    /**
+     * 测试删除功能
+     */
+
+    @Test
+    public void testDelete() {
+
+        System.out.println();
     }
 }

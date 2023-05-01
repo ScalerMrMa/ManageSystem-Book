@@ -11,25 +11,27 @@
 </head>
 <body>
 
-<table class="layui-hide" id="bookInfo" lay-filter="test"></table>
+<table class="layui-hide" id="bookCategory" lay-filter="test"></table>
 
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
-        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+        <button class="layui-btn layui-btn-primary" lay-event="addBookCategory">新增</button>
+        <button class="layui-btn layui-btn-danger delAll_btn" lay-event="deleteBookCategory">批量删除</button>
     </div>
 </script>
 
-
-<!--表单-->
-<script type="text/html" id="edit_form">
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<!--添加表单-->
+<script type="text/html" id="add-category">
     <div class="layui-col-md10" style="margin-left: 35px; margin-top: 20px">
         <form class="layui-form" action="">
             <div class="layui-form-item">
-                <label class="layui-form-label">分类</label>
+                <label class="layui-form-label">isbn</label>
                 <div class="layui-input-block">
-                    <input type="text" name="bookCategory" required lay-verify="required" placeholder="请输入类别"
+                    <input type="text" name="isbn" required lay-verify="required" placeholder="请输入书号"
                            autoComplete="on" class="layui-input">
                 </div>
             </div>
@@ -38,6 +40,40 @@
                 <div class="layui-input-block">
                     <input type="text" name="bookCategory" required lay-verify="required" placeholder="请输入类别"
                            autoComplete="on" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="text-align: center">
+                    <button class="layui-btn" lay-submit lay-filter="addCategory">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+
+<!--编辑表单-->
+<script type="text/html" id="edit-category">
+    <div class="layui-col-md10" style="margin-left: 35px; margin-top: 20px">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">isbn</label>
+                <div class="layui-input-block">
+                    <input type="text" name="isbn" required lay-verify="required" placeholder="请输入书号"
+                           autoComplete="on" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">类别</label>
+                <div class="layui-input-block">
+                    <input type="text" name="bookCategory" required lay-verify="required" placeholder="请输入类别"
+                           autoComplete="on" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="text-align: center">
+                    <button class="layui-btn" lay-submit lay-filter="addCategory">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                 </div>
             </div>
         </form>
@@ -53,7 +89,7 @@
         var layer = layui.layer
             ,$ = layui.jquery,form = layui.form,table = layui.table;
         table.render({
-            elem: '#bookInfo'
+            elem: '#bookCategory'
             ,url: '/manage/bookCategory'
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
             ,defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
@@ -67,7 +103,7 @@
                     {type: 'checkbox', fixed: 'left'}
                     ,{field:'isbn', title:'ISBN', width:360}
                     ,{field:'bookCategory', title:'图书类别', width:360, edit: 'text'}
-
+                    ,,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
                 ]
             ]
             ,page: true
@@ -89,18 +125,38 @@
         table.on('toolbar(test)', function(obj){
             var checkStatus = table.checkStatus(obj.config.id);
             switch(obj.event){
-                case 'getCheckData':
+                case 'addBookCategory':
                     var data = checkStatus.data;
-                    layer.alert(JSON.stringify(data));
+                    layer.open({
+                        title:"添加图书类别",
+                        type:1,
+                        area:['440px','330px'],
+                        content:$('#add-category').html()
+                    });
                     break;
-                case 'getCheckLength':
-                    var data = checkStatus.data;
-                    layer.msg('选中了：'+ data.length + ' 个');
-                    break;
-                case 'isAll':
-                    layer.msg(checkStatus.isAll ? '全选': '未全选');
-                    break;
+                case 'deleteBookCategory':
+                    $(".delAll_btn").click(function () {
+                        var checkStatus = table.checkStatus('bookCategory'),
+                            data = checkStatus.data,
+                            userId = "";
+                        if (data.length > 0) {
+                            for (var i in data) {
+                                userId += data[i].id + ",";
+                            }
+                            console.log(userId);
+                            layer.confirm('确定删除选中的用户？', {icon: 3, title: '提示信息'}, function (index) {
+                                $.post('', {ids: userId}, function (data) {
+                                    layer.msg(data.msg);
+                                    tableIns.reload();
+                                    layer.close(index);
+                                });
+                            })
+                        } else {
+                            layer.msg("请选择需要删除的用户");
+                        }
+                    });
 
+                    break;
                 //自定义头工具栏右侧图标 - 提示
                 case 'LAYTABLE_TIPS':
                     layer.alert('我还没有想好说什么咯！');
@@ -108,49 +164,55 @@
             };
         });
 
-        //监听行工具事件
+        // 监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
             //console.log(obj)
-            if(obj.event === 'del'){
-                layer.confirm('真的删除行么', function(index){
-                    obj.del();
-                    layer.close(index);
+            if (obj.event === 'del') {
+                layer.confirm('确定删除图书类别信息？', {icon: 3, title: '提示信息'}, function(index) {
+                    $.ajax({
+                        url: 'manage/deleteBookCategory',
+                        type: 'DELETE',
+                        data: {
+                            isbn: obj.data.isbn
+                        },
+                        success: function(resultVo) {
+                            console.log(data)
+                            layer.msg(resultVo.msg,{
+                                icon: 1,
+                                time: 1000,
+                            },function (){
+                                parent.location.reload();
+                            });
+                            tableIns.reload();
+                            layer.close(index);
+                        }
+                    });
                 });
             } else if(obj.event === 'edit'){
-                // 弹出表单进行修改
                 layer.open({
-                    title: "修改书籍信息",
+                    title:"编辑图书类别",
                     type:1,
-                    area: ['660px','550px'],
-                    content: $('#edit_form').html()
-                })
-
-                // 更新渲染表单
-                form.render()
-                form.val('edit_form', {
-                    // 赋值
-                    "bookName":obj.data.bookName,
-                    "bookCategory":obj.data.bookCategory,
-                    "author":obj.data.author,
-                    "publisher":obj.data.publisher,
-                    "bookInformation":obj.bookInformation,
-                    "publicationDate":ob.publicationDate,
-                    "registrationDate":obj.registrationDate
-                })
-                // 表单数据回显
-                form.success()
-                // 提交表单
-                form.on('submit(formDemo', function (message) {
-                    console.log(message.field);
-                    console.log(obj.date);
-                    $.ajax({
-                        url:":url"
-                    })
-
+                    area:['440px','330px'],
+                    content:$('#edit-category').html()
                 })
             }
         });
+
+        // 新增图书类别
+        form.on('submit(addCategory)', function (data) {
+            $.post("manage/insertBookCategory", data.field, function (resultVo) {
+                layer.msg(resultVo.msg,{
+                    icon: 1,
+                    time: 1000  // 1秒关闭
+                }, function (){
+                    // 一秒以后进行页面重新刷新
+                    parent.location.reload();
+                });
+            })
+            // 阻止form表单提示
+            return false;
+        })
     });
 </script>
 

@@ -1,6 +1,5 @@
 server:
   port: 8080    # 端口号
-
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -12,6 +11,7 @@ spring:
     suffix: .html
     cache: false
     mode: HTML
+
 # 为什么使用Thymeleaf
 ##  使用Spring Boot时，通常使用模板引擎（如Thymeleaf、Freemarker等）来生成HTML页面，然后在控制器中使用视图解析器将这些页面渲染并返回给客户端。
 ## 当使用@Controller注解时，Spring会使用视图解析器解析返回的字符串并在模板引擎中查找相应的模板，最终生成HTML页面并返回给客户端。
@@ -21,6 +21,5 @@ spring:
 ## 因此，为了正确重定向到另一个页面并显示正确的内容，需要在@RestController控制器中正确配置视图解析器和模板引擎
 # 配置日志
 logging:
-  pattern:
-    level:
-      com.it.dao : debug
+  level:
+    com.it.dao: debug

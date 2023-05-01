@@ -2,8 +2,6 @@ package com.it.domain;
 
 import lombok.Data;
 
-import java.util.Date;
-
 /**
  * 图书信息
  * @author MrMa
@@ -22,6 +20,6 @@ public class BookInfo {
     private String author;          // 作者
     private String publisher;       // 出版社
     private String bookInformation; // 图书信息
-    private Date publicationDate;   // 出版时间
-    private Date registrationDate;  // 登记时间
+    private String publicationDate;   // 出版时间
+    private String registrationDate;  // 登记时间
 }

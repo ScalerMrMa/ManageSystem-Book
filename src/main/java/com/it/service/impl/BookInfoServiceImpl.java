@@ -1,9 +1,11 @@
 package com.it.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.it.dao.BookInfoDao;
 import com.it.domain.BookInfo;
 import com.it.service.BookInfoService;
 import com.it.vo.DataVo;
+import com.it.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,10 @@ public class BookInfoServiceImpl implements BookInfoService {
     @Autowired
     private BookInfoDao bookInfoDao;
 
+    /**
+     * 获取图书列表
+     * @return
+     */
     public DataVo<BookInfo> getBookInfoList() {
         // 创造查询条件
         DataVo<BookInfo> bookInfoDataVo = new DataVo<>();
@@ -33,4 +39,37 @@ public class BookInfoServiceImpl implements BookInfoService {
         bookInfoDataVo.setData(bookInfoList);
         return bookInfoDataVo;
     }
+
+    /**
+     * 根据isbn删除图书信息
+     */
+    @Override
+    public ResultVo deleteBookInfo(String isbn) {
+        QueryWrapper<BookInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("isbn",isbn);
+        int delete = bookInfoDao.delete(queryWrapper);
+
+        // 创建ResultVo
+        ResultVo resultVo = new ResultVo();
+        if (delete == 1) {
+            resultVo.setCode(0);
+            resultVo.setMsg("删除成功！");
+            return resultVo;
+        }else {
+            resultVo.setCode(1);
+            resultVo.setMsg("删除失败！");
+            return resultVo;
+        }
+    }
+
+    /**
+     * 新增图书信息
+     * @param bookInfo
+     */
+    @Override
+    public void insetBookInfo(BookInfo bookInfo) {
+        bookInfoDao.insert(bookInfo);
+    }
+
+
 }
