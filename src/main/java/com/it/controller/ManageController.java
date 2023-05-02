@@ -1,13 +1,7 @@
 package com.it.controller;
 
-import com.it.domain.BookCategory;
-import com.it.domain.BookInfo;
-import com.it.domain.BorrowRuleManage;
-import com.it.domain.BorrowingInformation;
-import com.it.service.BookCategoryService;
-import com.it.service.BookInfoService;
-import com.it.service.BorrowInfoService;
-import com.it.service.BorrowRuleManageService;
+import com.it.domain.*;
+import com.it.service.*;
 import com.it.vo.DataVo;
 import com.it.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 /**
  * @author MrMa
@@ -41,6 +33,9 @@ public class ManageController {
     @Autowired
     private BorrowRuleManageService borrowRuleManageService;
 
+    @Autowired
+    private AnnouncementService announcementService;
+
     // ----------------------------------查询专区---------------------------------------------------
     /**
      * 获取图书列表
@@ -48,10 +43,9 @@ public class ManageController {
      */
     @GetMapping("/bookList")
     @ResponseBody
-    public DataVo<BookInfo> bookList() {
-        log.println("访问成功");
-
-        return bookInfoService.getBookInfoList();
+    public DataVo<BookInfo> bookList(String bookName) {
+        System.out.println(bookName);
+        return bookInfoService.getBookInfoList(bookName);
     }
 
     /**
@@ -84,6 +78,12 @@ public class ManageController {
         return borrowRuleManageService.getBorrowRuleManage();
     }
 
+    @GetMapping("/announcementList")
+    @ResponseBody
+    public DataVo<Announcement> getAnnouncements() {
+        return announcementService.selectAnnouncement();
+    }
+
     //------------------------------------添加功能---------------------------------------------
 
     /**
@@ -94,12 +94,7 @@ public class ManageController {
     @RequestMapping(value = "/insertBookInfo", method = RequestMethod.POST)
     @ResponseBody
     public ResultVo insertBook(BookInfo bookInfo) {
-
-        bookInfoService.insetBookInfo(bookInfo);
-        ResultVo resultVo = new ResultVo();
-        resultVo.setCode(0);
-        resultVo.setMsg("提交成功");
-        return resultVo;
+        return  bookInfoService.insetBookInfo(bookInfo);
     }
 
     /**
@@ -113,12 +108,27 @@ public class ManageController {
         return bookCategoryService.insertBookCategory(bookCategory);
     }
 
+    /**
+     * 添加图书借阅规则
+     * @param borrowRuleManage
+     * @return
+     */
     @RequestMapping(value = "/insertBorrowRule", method = RequestMethod.POST)
     @ResponseBody
     public ResultVo insertBorrowRule(BorrowRuleManage borrowRuleManage) {
-        System.out.println(borrowRuleManage);
         return borrowRuleManageService.addBorrowRuleManage(borrowRuleManage);
     }
+
+    /**
+     * 发布公告
+     * @param announcement
+     * @return
+     */
+    @RequestMapping(value = "insertAnnouncement", method = RequestMethod.POST)
+    @ResponseBody
+     public ResultVo insertAnnouncement(Announcement announcement) {
+        return announcementService.insertAnnouncement(announcement);
+     }
     // ----------------------------------删除专区-----------------------------
 
 
@@ -130,7 +140,6 @@ public class ManageController {
     @RequestMapping( "/deleteBookInfo")
     @ResponseBody
     public ResultVo deleteBookInfo(String isbn) {
-        System.out.println(isbn);
         BookInfo bookInfo = new BookInfo();
         bookInfo.setIsbn(isbn);
         return bookInfoService.deleteBookInfo(bookInfo);
@@ -155,7 +164,6 @@ public class ManageController {
     @RequestMapping("/deleteBookCategory")
     @ResponseBody
     public ResultVo deleteBookCategory(String isbn) {
-        System.out.println(isbn);
         BookCategory bookCategory = new BookCategory();
         bookCategory.setIsbn(isbn);
 
@@ -181,7 +189,7 @@ public class ManageController {
     @RequestMapping("/deleteAllBookCategory")
     @ResponseBody
     public ResultVo deleteAllBorrowManage(@RequestParam("number") List<Integer> numbers) {
-        System.out.println(numbers);
+
         return borrowRuleManageService.deleteAllBorrowManage(numbers);
     }
 
@@ -193,21 +201,60 @@ public class ManageController {
     @RequestMapping("/deleteBorrowRule")
     @ResponseBody
     public ResultVo deleteBorrowRule(Integer number) {
-        System.out.println(number);
+
         return borrowRuleManageService.deleteBorrowRule(number);
+    }
+
+    /**
+     * 根据发布序号删除发布内容
+     * @param     @ResponseBody
+     *     public ResultVo deleteAnnouncement(Integer publishNumber) {
+     * @return
+     */
+    @RequestMapping("deleteAnnouncement")
+    @ResponseBody
+    public ResultVo deleteAnnouncement(Integer publishNumber) {
+        return announcementService.deleteAnnouncement(publishNumber);
+    }
+
+    @RequestMapping("deleteManyAnnouncement")
+    @ResponseBody
+    public ResultVo deleteManyAnnouncement(@RequestParam("publishNumber") List<Integer> publishNUmbers) {
+        return announcementService.deleteManyAnnouncement(publishNUmbers);
     }
     // ------------------------------------修改专区---------------------------------------
 
+    /**
+     * 图书信息修改
+     * @param bookInfo
+     * @return
+     */
+    @RequestMapping("/updateBookInfo")
+    @ResponseBody
+    public ResultVo updateBookInfo(BookInfo bookInfo) {
+        System.out.println(bookInfo);
+        return bookInfoService.updateBookInfo(bookInfo);
+    }
 
     /**
-     * 修改图书类别
+     * 图书类别信修改
      * @param bookCategory
      * @return
      */
-    @RequestMapping("/updateCategory")
+    @RequestMapping("/updateBookCategory")
     @ResponseBody
-    public ResultVo updateBookCategory(BookCategory bookCategory) {
-        System.out.println(bookCategory);
+    public ResultVo updateBookCateGory(BookCategory bookCategory) {
         return bookCategoryService.updateBookCategory(bookCategory);
+    }
+
+    /**
+     * 图书借阅规则修改
+     * @param borrowRuleManage
+     * @return
+     */
+    @RequestMapping("/updateBorrowRules")
+    @ResponseBody
+    public ResultVo borrowRuleManage(BorrowRuleManage borrowRuleManage) {
+        return borrowRuleManageService.borrowRuleManage(borrowRuleManage);
     }
 }

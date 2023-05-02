@@ -3,7 +3,6 @@ package com.it.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.it.dao.BookInfoDao;
-import com.it.domain.BookCategory;
 import com.it.domain.BookInfo;
 import com.it.service.BookInfoService;
 import com.it.vo.DataVo;
@@ -11,7 +10,6 @@ import com.it.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Book;
 import java.util.List;
 
 /**
@@ -29,16 +27,20 @@ public class BookInfoServiceImpl implements BookInfoService {
      * 获取图书列表
      * @return
      */
-    public DataVo<BookInfo> getBookInfoList() {
+    public DataVo<BookInfo> getBookInfoList(String bookName) {
         // 创造查询条件
         DataVo<BookInfo> bookInfoDataVo = new DataVo<>();
+        QueryWrapper<BookInfo> queryWrapper = new QueryWrapper();
+        if (bookName != null) {
+            queryWrapper.eq("book_name", bookName);
+        }
         bookInfoDataVo.setCode(0);
         bookInfoDataVo.setMsg("");
-        Integer count = bookInfoDao.selectCount(null);
+        Integer count = bookInfoDao.selectCount(queryWrapper);
         bookInfoDataVo.setCount(count);
         System.out.println(count);
         // 查询所有的数据
-        List<BookInfo> bookInfoList = bookInfoDao.selectList(null);
+        List<BookInfo> bookInfoList = bookInfoDao.selectList(queryWrapper);
         bookInfoDataVo.setData(bookInfoList);
         return bookInfoDataVo;
     }
@@ -89,13 +91,49 @@ public class BookInfoServiceImpl implements BookInfoService {
     }
 
     /**
-     * 新增图书信息
+     * 添加图书信息
      * @param bookInfo
+     * @return
      */
     @Override
-    public void insetBookInfo(BookInfo bookInfo) {
-        bookInfoDao.insert(bookInfo);
+    public ResultVo insetBookInfo(BookInfo bookInfo) {
+        int insert = bookInfoDao.insert(bookInfo);
+        ResultVo resultVo = new ResultVo();
+        if (insert == 0) {
+
+            resultVo.setCode(1);
+            resultVo.setMsg("添加失败！");
+            return resultVo;
+        }else {
+            resultVo.setCode(0);
+            resultVo.setMsg("添加成功！");
+            return resultVo;
+        }
     }
+
+    /**
+     * 更新图书信息
+     * @param bookInfo
+     * @return
+     */
+    @Override
+    public ResultVo updateBookInfo(BookInfo bookInfo) {
+        QueryWrapper<BookInfo> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("isbn", bookInfo.getIsbn());
+
+        int update = bookInfoDao.update(bookInfo, queryWrapper);
+
+        ResultVo resultVo = new ResultVo();
+        if (update != 0) {
+            resultVo.setCode(0);
+            resultVo.setMsg("数据已经修改！");
+        }else {
+            resultVo.setCode(1);
+            resultVo.setMsg("数据修改失败！");
+        }
+        return resultVo;
+    }
+
 
 
 

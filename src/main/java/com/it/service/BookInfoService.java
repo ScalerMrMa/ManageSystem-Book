@@ -13,14 +13,18 @@ import java.util.List;
  */
 public interface BookInfoService{
 
-    DataVo<BookInfo> getBookInfoList();
+    // 获取图书列表
+    DataVo<BookInfo> getBookInfoList(String bookName);
 
     // 删除图书信息
     ResultVo deleteBookInfo(BookInfo bookInfo);
 
+    // 删除图书西信息
     ResultVo deleteAllBookInfo(List<String> isbns);
 
-    void insetBookInfo(BookInfo bookInfo);
+    // 新增图书信息
+    ResultVo insetBookInfo(BookInfo bookInfo);
 
-
+    // 编辑图书信息
+    ResultVo updateBookInfo(BookInfo bookInfo);
 }

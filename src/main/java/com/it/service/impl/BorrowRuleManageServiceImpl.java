@@ -98,4 +98,22 @@ public class BorrowRuleManageServiceImpl implements BorrowRuleManageService {
             return resultVo;
         }
     }
+
+    // 修改表单数据
+    public ResultVo borrowRuleManage(BorrowRuleManage borrowRuleManage) {
+        QueryWrapper<BorrowRuleManage> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("number", borrowRuleManage.getNumber());
+
+        int update = borrowRuleManageDao.update(borrowRuleManage, queryWrapper);
+
+        ResultVo resultVo = new ResultVo();
+        if (update != 0) {
+            resultVo.setCode(0);
+            resultVo.setMsg("数据已经修改！");
+        }else {
+            resultVo.setCode(1);
+            resultVo.setMsg("数据修改失败！");
+        }
+        return resultVo;
+    }
 }

@@ -24,4 +24,7 @@ public interface BorrowRuleManageService {
 
     // 删除单挑图书借阅规则
     ResultVo deleteBorrowRule(Integer number);
+
+    // 更新图书借阅规则
+    ResultVo borrowRuleManage(BorrowRuleManage borrowRuleManage);
 }

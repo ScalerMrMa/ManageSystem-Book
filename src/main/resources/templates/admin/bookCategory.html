@@ -54,21 +54,33 @@
 
 <!--编辑表单-->
 <script type="text/html" id="edit-category" style="display: none">
-    <div class="layui-col-md10" style="margin-left: 35px; margin-top: 20px">
-        <form class="layui-form" action="" filter="editForm">
-
+    <div class="layui-col-md10" style="margin-left: 35px">
+        <form class="layui-form" action="" lay-filter="editForm">
             <div class="layui-form-item">
-                <label class="layui-form-label">类别</label>
+                <label class="layui-form-label">书号</label>
                 <div class="layui-input-block">
-                    <input type="text" name="bookCategory" required lay-verify="required" placeholder="请输入类别"
-                           autoComplete="on" class="layui-input">
+                    <input type="text" name="isbn" required lay-verify="required" placeholder="请输入书名" autoComplete="no"
+                           disabled value="禁止修改" style="color: darkgray"
+                           class="layui-input">
                 </div>
             </div>
-            <div class="layui-form-item">
-                <div class="layui-input-block" style="text-align: center">
-                    <button class="layui-btn" lay-submit lay-filter="editCategory">立即提交</button>
-                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                </div>
+            <div class="layui-col-md10" style="margin-left: 35px; margin-top: 20px">
+                <form class="layui-form" action="" filter="editForm">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">类别</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="bookCategory" required lay-verify="required" placeholder="请输入类别"
+                                   autoComplete="on" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="text-align: center">
+                            <button class="layui-btn" lay-submit lay-filter="edit-btn-form">立即提交</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </form>
     </div>
@@ -160,7 +172,7 @@
                                     error: function (resultVo) {
                                         console.log(data)
                                         layer.msg(resultVo.msg,{
-                                            icon: 1,
+                                            icon: 2,
                                             time: 1000,
                                         },function (){
                                             parent.location.reload();
@@ -172,7 +184,7 @@
                                 });
                             })
                         } else {
-                            layer.msg("请选择需要删除的用户");
+                            layer.msg("请选择需要删除的图书类别");
                         }
                     });
 
@@ -224,11 +236,41 @@
                     type: 1,
                     area: ['440px', '330px'],
                     content: $('#edit-category').html(), // 将表单 HTML 代码作为弹出层的内容
-
+                    success: function (layero,index) {
+                        form.val('editForm',{
+                            "isbn": obj.data.isbn,
+                            "bookCategory": obj.data.bookCategory
+                        });
+                    },error: function (resultVo) {
+                        layer.msg(resultVo.msg,{
+                            icon: 2,
+                            time: 1000,
+                        },function (){
+                            parent.location.reload();
+                        });
+                        layer.close(index);
+                    }
                 });
 
             }
         });
+
+        // 修改数据
+        form.on('submit(edit-btn-form)', function (data) {
+            $.post("manage/updateBookCategory", data.field, function (resultVo) {
+                layer.msg(resultVo.msg,{
+                    icon: 1,
+                    time: 1000  // 1秒关闭
+                }, function (){
+                    // 一秒以后进行页面重新刷新
+                    parent.location.reload();
+                });
+            }).fail(function() {
+                layer.alert('添加失败!', {icon: 2});
+            });
+            // 阻止form表单提示
+            return false;
+        })
 
         // 新增图书类别
         form.on('submit(addCategory)', function (data) {

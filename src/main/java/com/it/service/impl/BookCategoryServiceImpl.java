@@ -110,21 +110,26 @@ public class BookCategoryServiceImpl implements BookCategoryService {
         }
     }
 
-
+    /**
+     * 修改图书类别信息
+     * @param bookCategory
+     * @return
+     */
     @Override
     public ResultVo updateBookCategory(BookCategory bookCategory) {
-        QueryWrapper<BookCategory> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<BookCategory> queryWrapper = new QueryWrapper();
         queryWrapper.eq("isbn", bookCategory.getIsbn());
+
         int update = bookCategoryDao.update(bookCategory, queryWrapper);
+
         ResultVo resultVo = new ResultVo();
         if (update != 0) {
             resultVo.setCode(0);
-            resultVo.setMsg("修改成功！");
-            return resultVo;
+            resultVo.setMsg("数据已经修改！");
         }else {
             resultVo.setCode(1);
-            resultVo.setMsg("修改失败！");
-            return resultVo;
+            resultVo.setMsg("数据修改失败！");
         }
+        return resultVo;
     }
 }
