@@ -65,13 +65,12 @@ public class ManageController {
     }
 
     /**
-     * 借阅信息查询,模糊搜索
+     * 借阅信息查询,模糊搜索用户id和图书名字
      * @return
      */
     @GetMapping("/borrowInfoSearch")
     @ResponseBody
     public DataVo<BorrowingInformation> GetBorrowInfo(String readerId,String bookName) {
-        System.out.println("reader_id:" + readerId + "bookName" + bookName);
         return borrowInfoService.getBorrowInfo(readerId,bookName);
     }
 
@@ -114,6 +113,12 @@ public class ManageController {
         return bookCategoryService.insertBookCategory(bookCategory);
     }
 
+    @RequestMapping(value = "/insertBorrowRule", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultVo insertBorrowRule(BorrowRuleManage borrowRuleManage) {
+        System.out.println(borrowRuleManage);
+        return borrowRuleManageService.addBorrowRuleManage(borrowRuleManage);
+    }
     // ----------------------------------删除专区-----------------------------
 
 
@@ -168,6 +173,29 @@ public class ManageController {
         return bookCategoryService.deleteAllBookCategory(isbns);
     }
 
+    /**
+     * 批量删除图书借阅规则
+     * @param numbers
+     * @return
+     */
+    @RequestMapping("/deleteAllBookCategory")
+    @ResponseBody
+    public ResultVo deleteAllBorrowManage(@RequestParam("number") List<Integer> numbers) {
+        System.out.println(numbers);
+        return borrowRuleManageService.deleteAllBorrowManage(numbers);
+    }
+
+    /**
+     * 删除单条图书借阅管理规则
+     * @param number
+     * @return
+     */
+    @RequestMapping("/deleteBorrowRule")
+    @ResponseBody
+    public ResultVo deleteBorrowRule(Integer number) {
+        System.out.println(number);
+        return borrowRuleManageService.deleteBorrowRule(number);
+    }
     // ------------------------------------修改专区---------------------------------------
 
 
