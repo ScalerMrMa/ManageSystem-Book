@@ -11,12 +11,19 @@
 </head>
 <body>
 
-<div class="demoTable">
+<div class="demoTable" style="margin-top: 10px">
     &nbsp;&nbsp;&nbsp;&nbsp;搜索ID：
     <div class="layui-inline">
-        <input class="layui-input" name="id" id="demoReload" autocomplete="off">
+        <input class="layui-input" name="id" id="searchId" autocomplete="on" placeholder="请输入ID进行查询">
     </div>
-    <button class="layui-btn" data-type="reload">搜索</button>
+    <button type="button" class="layui-btn layui-btn-normal" data-type="reload" lay-filter="data-search-btn">搜索</button>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;图书查询：
+    <div class="layui-inline">
+        <input class="layui-input" name="id" id="searchBookName" autocomplete="on" placeholder="请输入书名查询">
+    </div>
+    <button type="button" class="layui-btn layui-btn-normal" data-type="reload" lay-filter="data-search-btn">搜索</button>
+
 </div>
 
 <table class="layui-hide" id="borrow_info" lay-filter="test"></table>
@@ -34,34 +41,45 @@
             ,url: '/manage/borrowInfoSearch'
             ,cols: [
                 [
-                {checkbox: true, fixed: true}
-                ,{field:'readerId', title: '用户ID', width:200, sort: true, fixed: true}
-                ,{field:'readerName', title: '用户名', width:200}
-                ,{field:'isbn', title: 'ISBN', width:200, sort: true}
-                ,{field:'bookName', title: '书名', width:200}
-                ,{field:'loanDate', title: '借阅日期',width: 200}
-                ,{field:'returnDate', title: '归还日期', sort: true, width:200}
+                    {checkbox: true, fixed: true}
+                    ,{field:'readerId', title: '用户ID', width:200, sort: true, fixed: true}
+                    ,{field:'readerName', title: '用户名', width:200}
+                    ,{field:'isbn', title: 'ISBN', width:200, sort: true}
+                    ,{field:'bookName', title: '书名', width:200}
+                    ,{field:'loanDate', title: '借阅日期',width: 200}
+                    ,{field:'returnDate', title: '归还日期', sort: true, width:200}
 
-            ]
+                ]
             ]
             ,id: 'testReload'
             ,page: true
-            ,height: 310
+            ,limit:10
+            ,parseData: function (res) {
+                var result;
+                console.log(this);
+                console.log(JSON.stringify(res));
+                if (this.page.curr) {
+                    result = res.data.slice(this.limit * (this.page.curr - 1), this.limit * this.page.curr);
+                } else {
+                    result = res.data.slice(0, this.limit);
+                }
+                return {"code": res.code, "msg": res.msg, "count": res.count, "data": result};
+            }
+
         });
 
         var $ = layui.$, active = {
             reload: function(){
-                var demoReload = $('#demoReload');
-
+                var demoReloadOne = $('#searchId');        // 获取搜索框中的内容
+                var demoReloadTwo = $('#searchBookName')
                 //执行重载
                 table.reload('testReload', {
                     page: {
                         curr: 1 //重新从第 1 页开始
                     }
                     ,where: {
-                        key: {
-                            id: demoReload.val()
-                        }
+                        readerId: demoReloadOne.val(),
+                        bookName: demoReloadTwo.val()
                     }
                 });
             }

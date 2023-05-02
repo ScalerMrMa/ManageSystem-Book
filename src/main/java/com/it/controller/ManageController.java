@@ -65,16 +65,20 @@ public class ManageController {
     }
 
     /**
-     * 借阅信息查询
+     * 借阅信息查询,模糊搜索
      * @return
      */
     @GetMapping("/borrowInfoSearch")
     @ResponseBody
-    public DataVo<BorrowingInformation> GetBorrowInfo() {
-
-        return borrowInfoService.getBorrowInfo();
+    public DataVo<BorrowingInformation> GetBorrowInfo(String readerId,String bookName) {
+        System.out.println("reader_id:" + readerId + "bookName" + bookName);
+        return borrowInfoService.getBorrowInfo(readerId,bookName);
     }
 
+    /**
+     * 图书规则查询
+     * @return
+     */
     @GetMapping("/borrowRuleManage")
     @ResponseBody
     public DataVo<BorrowRuleManage> getBorrowRuleManage() {
@@ -99,6 +103,11 @@ public class ManageController {
         return resultVo;
     }
 
+    /**
+     * 添加图书类别信息
+     * @param bookCategory
+     * @return
+     */
     @RequestMapping(value = "/insertBookCategory", method = RequestMethod.POST)
     @ResponseBody
     public ResultVo insertBookCategory(BookCategory bookCategory) {
@@ -122,6 +131,11 @@ public class ManageController {
         return bookInfoService.deleteBookInfo(bookInfo);
     }
 
+    /**
+     * 批量删除图书信息
+     * @param isbns
+     * @return
+     */
     @RequestMapping("/deleteAllBookInfo")
     @ResponseBody
     public ResultVo deleteAllBookInfo(@RequestParam("isbn") List<String> isbns) {

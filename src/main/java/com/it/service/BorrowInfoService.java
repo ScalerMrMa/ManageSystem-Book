@@ -10,5 +10,8 @@ import com.it.vo.DataVo;
  */
 public interface BorrowInfoService {
 
-    DataVo<BorrowingInformation> getBorrowInfo();
+    // 根据
+    DataVo<BorrowingInformation> getBorrowInfo(String isbn, String bookName);
+
+
 }

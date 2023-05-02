@@ -39,12 +39,6 @@ class ManageSystemBookApplicationTests {
         }
     }
 
-
-    @Test
-    public void  getInf() {
-        System.out.println(borrowInfoService.getBorrowInfo());
-    }
-
     /**
      * 测试查询借阅规则
      */
