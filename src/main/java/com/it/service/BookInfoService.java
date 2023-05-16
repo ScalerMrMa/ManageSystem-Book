@@ -14,17 +14,23 @@ import java.util.List;
 public interface BookInfoService{
 
     // 获取图书列表
-    DataVo<BookInfo> getBookInfoList(String bookName);
+    DataVo<BookInfo> getBookInfos(String bookName);
 
     // 删除图书信息
-    ResultVo deleteBookInfo(BookInfo bookInfo);
+    ResultVo forbidBookInfo(String isbn);
 
-    // 删除图书西信息
-    ResultVo deleteAllBookInfo(List<String> isbns);
+    // 删除图书信息
+    ResultVo forbidBookInfos(List<String> isbns);
 
     // 新增图书信息
-    ResultVo insetBookInfo(BookInfo bookInfo);
+    ResultVo addBookInfo(BookInfo bookInfo);
 
     // 编辑图书信息
     ResultVo updateBookInfo(BookInfo bookInfo);
+
+    // 上架图书
+    public ResultVo activeBookInfo(String isbn);
+
+    // 获取图书条数
+    public Integer getBookInfoCount();
 }

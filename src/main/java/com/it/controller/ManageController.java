@@ -44,8 +44,8 @@ public class ManageController {
     @GetMapping("/bookList")
     @ResponseBody
     public DataVo<BookInfo> bookList(String bookName) {
-        System.out.println(bookName);
-        return bookInfoService.getBookInfoList(bookName);
+        System.out.println("信息：" + bookName);
+        return bookInfoService.getBookInfos(bookName);
     }
 
     /**
@@ -94,7 +94,7 @@ public class ManageController {
     @RequestMapping(value = "/insertBookInfo", method = RequestMethod.POST)
     @ResponseBody
     public ResultVo insertBook(BookInfo bookInfo) {
-        return  bookInfoService.insetBookInfo(bookInfo);
+        return  bookInfoService.addBookInfo(bookInfo);
     }
 
     /**
@@ -129,20 +129,29 @@ public class ManageController {
      public ResultVo insertAnnouncement(Announcement announcement) {
         return announcementService.insertAnnouncement(announcement);
      }
-    // ----------------------------------删除专区-----------------------------
+    // ----------------------------------状态修改专区-----------------------------
 
 
     /**
-     * 删除图书信息
+     * 下架图书
      * @param isbn
      * @return
      */
-    @RequestMapping( "/deleteBookInfo")
+    @RequestMapping( "/forbidBooks")
     @ResponseBody
     public ResultVo deleteBookInfo(String isbn) {
-        BookInfo bookInfo = new BookInfo();
-        bookInfo.setIsbn(isbn);
-        return bookInfoService.deleteBookInfo(bookInfo);
+        return bookInfoService.forbidBookInfo(isbn);
+    }
+
+    /**
+     * 上架图书
+     * @param isbn
+     * @return
+     */
+    @RequestMapping("/activeBooks")
+    @ResponseBody
+    public ResultVo activeBookInfo(String isbn) {
+        return bookInfoService.activeBookInfo(isbn);
     }
 
     /**
@@ -150,10 +159,10 @@ public class ManageController {
      * @param isbns
      * @return
      */
-    @RequestMapping("/deleteAllBookInfo")
+    @RequestMapping("/forbidManyBookInfo")
     @ResponseBody
     public ResultVo deleteAllBookInfo(@RequestParam("isbn") List<String> isbns) {
-        return bookInfoService.deleteAllBookInfo(isbns);
+        return bookInfoService.forbidBookInfos(isbns);
     }
 
     /**
@@ -232,7 +241,7 @@ public class ManageController {
     @RequestMapping("/updateBookInfo")
     @ResponseBody
     public ResultVo updateBookInfo(BookInfo bookInfo) {
-        System.out.println(bookInfo);
+
         return bookInfoService.updateBookInfo(bookInfo);
     }
 
@@ -257,4 +266,5 @@ public class ManageController {
     public ResultVo borrowRuleManage(BorrowRuleManage borrowRuleManage) {
         return borrowRuleManageService.borrowRuleManage(borrowRuleManage);
     }
+
 }

@@ -10,10 +10,7 @@ import lombok.Data;
  */
 
 @Data
-
 public class BookInfo {
-
-
     private String isbn;            // 书号
     private String bookName;        // 书名
     private String bookCategory;    // 图书类别
@@ -22,4 +19,5 @@ public class BookInfo {
     private String bookInformation; // 图书信息
     private String publicationDate;   // 出版时间
     private String registrationDate;  // 登记时间
+    private String bookStatus;        // 图书状态
 }

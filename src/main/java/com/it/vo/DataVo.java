@@ -15,6 +15,6 @@ public class DataVo<T> {
     private Integer code;       // 状态码
     private String msg;         // 提示信息
     private Integer count;      // 条目数
-    private List<T> Data;       // 实体数据
+    private List<T> data;       // 实体数据
 
 }

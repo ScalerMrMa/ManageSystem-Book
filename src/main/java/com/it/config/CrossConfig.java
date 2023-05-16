@@ -6,5 +6,3 @@ package com.it.config;
  * @description 解决跨域问题
  */
 
-public class CrossConfig {
-}

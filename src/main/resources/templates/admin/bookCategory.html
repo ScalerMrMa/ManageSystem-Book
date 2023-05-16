@@ -164,7 +164,7 @@
                                             icon: 1,
                                             time: 1000,
                                         },function (){
-                                            parent.location.reload();
+                                            location.reload();
                                         });
                                         // tableIns.reload();
                                         layer.close(index);
@@ -175,7 +175,7 @@
                                             icon: 2,
                                             time: 1000,
                                         },function (){
-                                            parent.location.reload();
+                                            location.reload();
                                         });
                                         // tableIns.reload();
                                         layer.close(index);
@@ -193,7 +193,7 @@
                 case 'LAYTABLE_TIPS':
                     layer.alert('我还没有想好说什么咯！');
                     break;
-            };
+            }
         });
 
         // 监听行工具事件
@@ -214,7 +214,7 @@
                                 icon: 1,
                                 time: 1000,
                             },function (){
-                                parent.location.reload();
+                                location.reload();
                             });
                             layer.close(index);
                         },
@@ -223,7 +223,7 @@
                                 icon: 2,
                                 time: 1000,
                             },function (){
-                                parent.location.reload();
+                                location.reload();
                             });
                             layer.close(index);
                         }
@@ -246,7 +246,7 @@
                             icon: 2,
                             time: 1000,
                         },function (){
-                            parent.location.reload();
+                           location.reload();
                         });
                         layer.close(index);
                     }
@@ -263,7 +263,7 @@
                     time: 1000  // 1秒关闭
                 }, function (){
                     // 一秒以后进行页面重新刷新
-                    parent.location.reload();
+                    location.reload();
                 });
             }).fail(function() {
                 layer.alert('添加失败!', {icon: 2});
@@ -281,7 +281,7 @@
                     time: 1000  // 1秒关闭
                 }, function (){
                     // 一秒以后进行页面重新刷新
-                    parent.location.reload();
+                    location.reload();
                 });
             }).fail(function() {
                 layer.alert('添加失败!', {icon: 2});
@@ -290,22 +290,6 @@
             return false;
         })
 
-        // 修改图书类别
-        form.on('submit(editCategory)',function (obj) {
-            $.post("manage/updateCategory", obj.data.field, function (resultVo) {
-                layer.msg(resultVo.msg,{
-                    icon: 1,
-                    time: 1000  // 1秒关闭
-                }, function (){
-                    // 一秒以后进行页面重新刷新
-                    parent.location.reload();
-                });
-            }).fail(function() {
-                layer.alert('修改失败!', {icon: 2});
-            });
-            // 阻止form表单提示
-            return false;
-        })
     });
 </script>
 

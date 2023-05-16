@@ -1,11 +1,8 @@
 package com.it.controller;
 
-import com.it.dao.BookInfoDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.annotation.Resource;
 
 /**
  * @author MrMa
@@ -17,8 +14,6 @@ import javax.annotation.Resource;
 public class TransitController {
 
 
-    @Resource
-    BookInfoDao bookInfoDao;
 
     /**
      * 返回到templates下的homepage.html
@@ -73,4 +68,14 @@ public class TransitController {
     public String toAnnoncement() {
         return "admin/announcement";
     }
+
+    /**
+     * 用户信息展示
+     * @return
+     */
+    @GetMapping("showUserInfo")
+    public String toShowUserInfo() {
+        return "admin/showUserInfo";
+    }
+
 }
