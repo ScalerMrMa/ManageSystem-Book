@@ -131,10 +131,11 @@ public class TransitController {
 
         String email = (String)httpSession.getAttribute("email");
         String userNameByEmail = logService.getUserNameByEmail(email);
-
+        System.out.println(userNameByEmail);
         // 根据用户民获取用户信息
         lambdaQueryWrapper.eq(WorkUser::getUsername, userNameByEmail);
-        WorkUser workUser = workUserDao.selectOne(lambdaQueryWrapper);
+        WorkUser workUser = new WorkUser();
+        workUser = workUserDao.selectOne(lambdaQueryWrapper);
         System.out.println(workUser);
         modelAndView.addObject("workUserId", workUser.getWorkUserId());
         modelAndView.addObject("username", workUser.getUsername());
