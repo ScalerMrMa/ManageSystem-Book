@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据展示</title>
+
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script th:src="@{/layui/layui.js}" charset="utf-8"></script>
+    <script th:src="@{/js/jquery.js}"></script>
+    <script th:src="@{/js/echart.js}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Apple 风格样式 */
+        .apple-style-container {
+            font-family: 'SF Pro Display', 'Segoe UI', 'Roboto', 'Oxygen',
+            'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+            sans-serif;
+        }
+
+        .apple-style-panel {
+            border-radius: 10px;
+            background: #f2f2f7;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+            color: #333;
+            padding: 20px;
+        }
+
+        .apple-style-panel-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .apple-style-panel-subtitle {
+            font-size: 18px;
+            color: #777;
+            margin-bottom: 10px;
+        }
+
+        .apple-style-panel-content {
+            font-size: 48px;
+            font-weight: 600;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<div class="apple-style-container">
+    <div class="layuimini-main layui-top-box">
+        <div class="layui-card">
+            <div class="layui-card-header" style="text-align: center">
+                <h2>总览信息</h2>
+            </div>
+            <div class="layui-card-body" style="text-align: center">
+                <div class="layui-row layui-col-space5">
+
+                    <div class="layui-col-md3">
+                        <div class="col-xs-6 col-md-3">
+                            <div class="apple-style-panel">
+                                <div class="panel-body text-center">
+                                    <div class="apple-style-panel-title">
+                                        图书总数
+                                    </div>
+                                    <div class="apple-style-panel-subtitle">
+                                        实时
+                                    </div>
+                                    <div class="apple-style-panel-content" th:text="${bookCount}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md3">
+                        <div class="col-xs-6 col-md-3">
+                            <div class="apple-style-panel">
+                                <div class="panel-body text-center">
+                                    <div class="apple-style-panel-title">
+                                        出版社总数
+                                    </div>
+                                    <div class="apple-style-panel-subtitle">
+                                        实时
+                                    </div>
+                                    <div class="apple-style-panel-content" th:text="${publishCount}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md3">
+                        <div class="col-xs-6 col-md-3">
+                            <div class="apple-style-panel">
+                                <div class="panel-body text-center">
+                                    <div class="apple-style-panel-title">
+                                        用户统计
+                                    </div>
+                                    <div class="apple-style-panel-subtitle">
+                                        实时
+                                    </div>
+                                    <div class="apple-style-panel-content" th:text="${userCount}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md3">
+                        <div class="col-xs-6 col-md-3">
+                            <div class="apple-style-panel">
+                                <div class="panel-body text-center">
+                                    <div class="apple-style-panel-title">
+                                        作者总数
+                                    </div>
+                                    <div class="apple-style-panel-subtitle">
+                                        实时
+                                    </div>
+                                    <div class="apple-style-panel-content" th:text="${authorCount}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card">
+            <div class="layui-card-header" style="text-align: center">
+                <h3>数据图表</h3>
+            </div>
+            <div class="layui-card-body">
+                <!--图表展示-->
+                <div id="main" style="width: 100%;height:80vh;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 引入刚刚下载的 ECharts 文件 -->
+<script th:src="@{/js/echart.js}"></script>
+
+<script type="text/javascript">
+
+    var option = {
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            top: '5%',
+            left: 'center'
+        },
+        dataset: {
+            source: []
+        },
+        series: [
+            {
+                name: 'Access From',
+                type: 'pie',
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                    borderRadius: 10,
+                    borderColor: '#fff',
+                    borderWidth: 2
+                },
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: 40,
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                encode: {
+                    value: 'number',
+                    tooltip: 'number',
+                    itemName: 'categoryName'
+                }
+            }
+        ]
+    };
+
+    var myChart = echarts.init(document.getElementById('main'));
+
+
+    // 发送 AJAX 请求获取数据
+    $.ajax({
+        url: '/manage/ECharting',
+        method: 'GET',
+        success: function(response) {
+            // 数据成功返回后的处理
+            var dataset = Object.values(response.dataset);
+            console.log(dataset);
+
+            // 更新 ECharts 的配置项和数据
+            option.dataset.source = dataset;
+
+            // 重新渲染图表
+            myChart.setOption(option);
+        },
+        error: function() {
+            // 处理请求错误的情况
+            console.error('请求失败');
+        }
+    });
+
+    // 监听图表事件
+    myChart.on('updateAxisPointer', function(event) {
+        const xAxisInfo = event.axesInfo[0];
+        if (xAxisInfo) {
+            const dimension = xAxisInfo.value + 1;
+            myChart.setOption({
+                series: {
+                    id: 'pie',
+                    label: {
+                        formatter: '{b}: {@[' + dimension + ']} ({d}%)'
+                    },
+                    encode: {
+                        value: dimension,
+                        tooltip: dimension
+                    }
+                }
+            });
+        }
+    });
+
+</script>
+
+</body>
+</html>
