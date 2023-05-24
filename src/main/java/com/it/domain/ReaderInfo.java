@@ -12,7 +12,7 @@ import java.util.Date;
  */
 @Data
 public class ReaderInfo {
-
+    private String username;
     private String readerName;          // 读者姓名
     private String readerId;            // 读者Id
     private String gender;              // 性别

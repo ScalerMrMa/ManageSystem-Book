@@ -15,4 +15,7 @@ public interface LogService extends IService<User> {
 
     // 注册用户
     public int insertUser(User user);
+
+    // 根据email获取用户名
+    public String getUserNameByEmail(String email);
 }

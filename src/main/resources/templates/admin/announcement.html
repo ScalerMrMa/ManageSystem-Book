@@ -10,33 +10,23 @@
     <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
 <body>
-
 <table class="layui-hide" id="announcement" lay-filter="test"></table>
-
 <!--头工具栏-->
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-primary" lay-event="addAnnouncement">发布</button>
-        <button class="layui-btn layui-btn-danger delAll_btn" lay-event="deleteManyBorrowRule">批量删除</button>
+        <button class="layui-btn layui-btn-danger forbidMany" lay-event="forbidManyStatus">状态失效</button>
     </div>
 </script>
-
 <!--行工具栏-->
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="forbidStatus">失效</a>
 </script>
-
 <!--添加表单-->
 <script type="text/html" id="add-announcement">
     <div class="layui-col-md10" style="margin-left: 35px; margin-top: 20px">
         <form class="layui-form" action="">
-            <div class="layui-form-item">
-                <label class="layui-form-label">发布日期</label>
-                <div class="layui-input-block">
-                    <input type="date" name="publishDate" required lay-verify="required"
-                           autoComplete="on" class="layui-input">
-                </div>
-            </div>
+
             <div class="layui-form-item">
                 <label class="layui-form-label">发布者</label>
                 <div class="layui-input-block">
@@ -67,12 +57,8 @@
         </form>
     </div>
 </script>
-
-
 <script th:src="@{/layui/layui.js}" charset="utf-8"></script>
-
 <!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
-
 <script>
     layui.use(['table','form','jquery','layer'], function(){
         var layer = layui.layer
@@ -86,16 +72,18 @@
                 ,layEvent: 'LAYTABLE_TIPS'
                 ,icon: 'layui-icon-tips'
             }]
-            ,title: '图书信息表'
+            ,title: '公告表'
             ,cols: [
                 [
                     {type: 'checkbox', fixed: 'left'}
-                    ,{field:'publishNumber', title:'ID', width:220}
-                    ,{field:'publishDate', title:'发布日期', width:220}
-                    ,{field:'publisher', title:'发布者', width:220}
-                    ,{field:'publishContent', title:'发布内容', width:360}
-                    ,{field:'publishDays', title:'发布天数', width:300}
-                    ,,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
+                    ,{field:'publishNumber', title:'ID', width:120}
+                    ,{field:'publishDate', title:'发布日期', width:120}
+                    ,{field: 'editDate',title: '上次修改时间', width: 120}
+                    ,{field:'publisher', title:'发布者', width:120}
+                    ,{field:'publishContent', title:'发布内容', width:300}
+                    ,{field:'publishDays', title:'发布天数', width:120}
+                    ,{field:'publishStatus', title:'公告状态', width:120}
+                    ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
                 ]
             ]
             ,page: true
@@ -126,32 +114,48 @@
                         content:$('#add-announcement').html()
                     });
                     break;
-                case 'deleteManyBorrowRule':
-                    $(".delAll_btn").click(function () {
+                case 'forbidManyStatus':
+                    $(".forbidMany").click(function () {
                         var checkStatus = table.checkStatus('announcement'),
                             data = checkStatus.data,
-
-                            publishNumbers = "";
-
+                            publishNumbers = ""
                         if (data.length > 0) {
                             for (var i in data) {
                                 publishNumbers += data[i].publishNumber + ",";
                             }
-                            layer.confirm('确定删除选中的公告？', {icon: 3, title: '提示信息'}, function (index) {
+                            layer.confirm('确定将所选中的公告状态设置为失效？', {icon: 3, title: '提示信息'}, function (index) {
                                 $.ajax({
-                                    url: 'manage/deleteManyAnnouncement',
-                                    type: 'DELETE',
+                                    url: 'manage/forbidManyStatus',
+                                    type: 'PUT',
                                     data: {
                                         publishNumber: publishNumbers
                                     },
                                     success: function(resultVo) {
-                                        console.log(data)
-                                        layer.msg(resultVo.msg,{
-                                            icon: 2,
-                                            time: 1000,
-                                        },function (){
-                                            parent.location.reload();
-                                        });
+                                        if (resultVo.code === 0) {
+                                            layer.msg(resultVo.msg,{
+                                                icon: 1,
+                                                time: 1000  // 1秒关闭
+                                            }, function (){
+                                                // 一秒以后进行页面重新刷新
+                                                location.reload();
+                                            });
+                                        }else if (resultVo.code === 1) {
+                                            layer.msg(resultVo.msg,{
+                                                icon: 0,
+                                                time: 1000  // 1秒关闭
+                                            }, function (){
+                                                // 一秒以后进行页面重新刷新
+                                                location.reload();
+                                            });
+                                        }else if (resultVo.code === 3) {
+                                            layer.msg(resultVo.msg,{
+                                                icon: 2,
+                                                time: 1000  // 1秒关闭
+                                            }, function (){
+                                                // 一秒以后进行页面重新刷新
+                                                location.reload();
+                                            });
+                                        }
                                         // tableIns.reload();
                                         layer.close(index);
                                     },
@@ -161,7 +165,7 @@
                                             icon: 1,
                                             time: 1000,
                                         },function (){
-                                            parent.location.reload();
+                                            location.reload();
                                         });
                                         // tableIns.reload();
                                         layer.close(index);
@@ -186,31 +190,52 @@
         table.on('tool(test)', function(obj){
             var data = obj.data;
             //console.log(obj)
-            if (obj.event === 'del') {
+            if (obj.event === 'forbidStatus') {
                 layer.confirm('确定删除本公告？', {icon: 3, title: '提示信息'}, function(index) {
                     $.ajax({
-                        url: 'manage/deleteAnnouncement',
-                        type: 'DELETE',
+                        url: 'manage/forbidStatus',
+                        type: 'PUT',
                         data: {
                             publishNumber: obj.data.publishNumber
                         },
                         success: function(resultVo) {
-                            console.log(resultVo)
+                            if (resultVo.code === 0) {
+                                layer.msg(resultVo.msg,{
+                                    icon: 1,
+                                    time: 1000  // 1秒关闭
+                                }, function (){
+                                    // 一秒以后进行页面重新刷新
+                                    location.reload();
+                                });
+                            }else if (resultVo.code === 1) {
+                                layer.msg(resultVo.msg,{
+                                    icon: 0,
+                                    time: 1000  // 1秒关闭
+                                }, function (){
+                                    // 一秒以后进行页面重新刷新
+                                    location.reload();
+                                });
+                            }else if (resultVo.code === 3) {
+                                layer.msg(resultVo.msg,{
+                                    icon: 2,
+                                    time: 1000  // 1秒关闭
+                                }, function (){
+                                    // 一秒以后进行页面重新刷新
+                                    location.reload();
+                                });
+                            }
+                            // tableIns.reload();
+                            layer.close(index);
+                        },
+                        error: function (resultVo) {
+                            console.log(data)
                             layer.msg(resultVo.msg,{
                                 icon: 1,
                                 time: 1000,
                             },function (){
-                                parent.location.reload();
+                                location.reload();
                             });
-                            layer.close(index);
-                        },
-                        error: function (resultVo) {
-                            layer.msg(resultVo.msg,{
-                                icon: 2,
-                                time: 50000,
-                            },function (){
-                                parent.location.reload();
-                            });
+                            // tableIns.reload();
                             layer.close(index);
                         }
 
@@ -228,7 +253,7 @@
                     time: 1000  // 1秒关闭
                 }, function (){
                     // 一秒以后进行页面重新刷新
-                    parent.location.reload();
+                    location.reload();
                 });
             }).fail(function() {
                 layer.alert('添加失败!', {icon: 2});

@@ -33,4 +33,10 @@ public interface BookInfoService{
 
     // 获取图书条数
     public Integer getBookInfoCount();
+
+
+    // 实现用户首页的搜索功能
+    public DataVo<BookInfo> getSearchBookInfo(String keyword);
+
+    public DataVo<BookInfo> getCategoriesBook(String requestData);
 }

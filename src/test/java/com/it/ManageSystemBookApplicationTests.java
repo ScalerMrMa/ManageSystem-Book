@@ -1,22 +1,25 @@
 package com.it;
 
 import com.it.dao.BookInfoDao;
-import com.it.domain.BookInfo;
 import com.it.service.BookInfoService;
 import com.it.service.BorrowInfoService;
 import com.it.service.BorrowRuleManageService;
+import com.it.service.DataStatisticsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
-
 @SpringBootTest
 class ManageSystemBookApplicationTests {
 
+    @Autowired
+    DataStatisticsService dataStatisticsService;
     @Test
     void contextLoads() {
+        dataStatisticsService.statistic();
+
     }
+
 
 
     @Autowired
@@ -33,10 +36,7 @@ class ManageSystemBookApplicationTests {
 
     @Test
     public void getBookInfo() {
-        List<BookInfo> bookInfos = bookInfoDao.selectList(null);
-        for (BookInfo bookInfo : bookInfos) {
-            System.out.println(bookInfo);
-        }
+
     }
 
     /**

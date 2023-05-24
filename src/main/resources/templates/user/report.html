@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>公告与反馈</title>
+    <style>
+        .wrap {
+            width: 90%;
+            height: 90vh;
+
+            position: relative;
+            margin: 0 auto;
+            margin-top: 20px;
+            right: 5%;
+        }
+
+        .box1 {
+            text-align: center;
+            vertical-align: center;
+            width: 100%;
+            height: 50vh;
+            float: left;
+            margin: 0 5px 0 5px;
+            border-radius: 18px;
+        }
+
+        .box1:nth-child(1) .box {
+            background-color: #fff9ec  ;
+        }
+
+        .box1:nth-child(2) .box {
+            background-color: #fff9ec  ;
+
+            /*background-image: url(/images/background.jpg);*/
+        }
+
+        .box1:nth-child(3) .box {
+            background-color: #fff9ec  ;
+
+            /*background-image: url(/images/background.jpg);*/
+        }
+
+        .box {
+            width: 100%;
+            height: 50vh;
+            box-sizing: border-box;
+            font-size: 28px;
+            border-radius: 18px;
+            color: black;
+            padding: 38px 0 0 38px;
+            position: absolute;
+            perspective: 1000px;
+            transition: 0.5s ease-in-out;
+        }
+
+        .mask1 {
+            width: 100%;
+            height: 50vh;
+            /*background-color: #000;*/
+            background-color: #FFFFFF;
+            border-radius: 18px;
+            color: #fff;
+            font-size: 30px;
+            text-align: center;
+            line-height: 300px;
+            font-family: '微软雅黑';
+            font-weight: bold;
+            position: absolute;
+            backface-visibility: hidden;
+            perspective: 1000px;
+            transform: rotateY(-180deg);
+            transition: 0.5s ease-in-out;
+        }
+        .mask2 {
+            width: 100%;
+            height: 50vh;
+            background-color: #FFFFFF;
+            border-radius: 18px;
+            color: #fff;
+            font-size: 30px;
+            text-align: center;
+            line-height: 300px;
+            font-family: '微软雅黑';
+            font-weight: bold;
+            position: absolute;
+            backface-visibility: hidden;
+            perspective: 1000px;
+            transform: rotateY(-180deg);
+            transition: 0.5s ease-in-out;
+        }
+
+        .box1:hover .box {
+            transform: rotateY(-180deg);
+        }
+
+        .box1:hover .mask1 {
+            transform: rotateY(-360deg);
+        }.box1:hover .mask2 {
+            transform: rotateY(-360deg);
+        }
+
+        .box1:nth-child(1) .mask1 {
+            color: #008080;
+        }
+
+        .box1:nth-child(2) .mask2 {
+            color: #ff0000;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="wrap">
+    <div class="box1">
+        <div class="box">公告</div>
+        <div id="announcement" class="mask1">
+
+        </div>
+    </div>
+    <div class="box1">
+        <div class="box">规则</div>
+        <div id="rule" class="mask2">
+
+        </div>
+    </div>
+</div>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/js/jquery.js}"></script>
+<script>
+    layui.use(['element', 'layer', 'util'], function() {
+        var element = layui.element
+            , layer = layui.layer
+            , util = layui.util
+            , $ = layui.$;
+
+
+        $(document).ready(function () {
+            // 获取后端数据并生成书籍卡片
+            $.ajax({
+                url: "/user/getAnnouncement",
+                method: "GET",
+                success: function (response) {
+                    // 清空之前的书籍列表
+                    $("#announcement").empty();
+
+                    // 对返回回来的状态进行一个判断，并给予不同的提示信息
+                    var reports = response.data;
+                    // 根据返回的数据生成书籍卡片
+                    reports.forEach(function (report) {
+                        var cardHtml = `
+                    <div class="book-card">
+
+                            <div class="book-details">
+                                <h3 class="book-title">${report.publishContent}</h3>
+                                <h3 class="book-description">${report.publishDate}</h3>
+                            </div>
+                </div>
+            </div>
+                    `;
+
+                        $("#announcement").append(cardHtml);
+                    });
+                },
+                error: function () {
+                    console.log("糟糕！出错了！");
+                }
+            });
+
+        });
+
+
+        $(document).ready(function () {
+            // 获取后端数据并生成书籍卡片
+            $.ajax({
+                url: "/user/getRules",
+                method: "GET",
+                success: function (response) {
+                    // 清空之前的书籍列表
+                    $("#rule").empty();
+
+                    // 对返回回来的状态进行一个判断，并给予不同的提示信息
+                    var reports = response.data;
+                    console.log(reports)
+                    // 根据返回的数据生成书籍卡片
+                    reports.forEach(function (report) {
+                        var cardHtml = `
+                    <div class="book-card">
+                            <div class="book-details">
+                                ${report.number}<span>${report.borrowRules}</span>
+                            </div>
+                </div>
+            </div>
+                    `;
+
+                        $("#rule").append(cardHtml);
+                    });
+                },
+                error: function () {
+                    console.log("糟糕！出错了！");
+                }
+            });
+
+        });
+    });
+
+
+</script>
+</body>
+</html>

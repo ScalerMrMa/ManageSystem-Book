@@ -1,0 +1,25 @@
+css
+.data-display {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.data-item {
+    width: calc(50% - 10px);
+    margin-bottom: 20px;
+    background-color: #f6f6f6;
+    padding: 20px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    text-align: center;
+}
+.data-item h3 {
+    margin-top: 0;
+}
+.data-item p {
+    margin-bottom: 0;
+}
+.data-item span {
+    font-weight: bold;
+    font-size: 24px;
+}

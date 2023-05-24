@@ -33,7 +33,7 @@ public class BorrowInfoServiceImpl implements BorrowInfoService {
             borrowingInformationDataVo.setMsg(""); // 设置信息
 
             // 记录数
-            Integer count = borrowingInformationDao.selectCount(null);
+            Integer count = Math.toIntExact(borrowingInformationDao.selectCount(null));
             borrowingInformationDataVo.setCount(count);
 
             // 获取借阅信息
@@ -55,7 +55,7 @@ public class BorrowInfoServiceImpl implements BorrowInfoService {
         borrowingInformationDataVo.setMsg(""); // 设置信息
 
         // 记录数
-        Integer count = borrowingInformationDao.selectCount(queryWrapper);
+        Integer count = Math.toIntExact(borrowingInformationDao.selectCount(queryWrapper));
         borrowingInformationDataVo.setCount(count);
 
         // 获取借阅信息

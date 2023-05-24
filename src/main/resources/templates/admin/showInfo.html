@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--模板渲染声明-->
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+</head>
+<body>
+<form class="layui-form" action="" style="margin-left: 100px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="vertical-align: middle;">ID</label>
+        <label class="layui-form-label" th:text="${workUserId}" style="text-align: left; vertical-align: middle;"></label>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="vertical-align: middle;">用户名</label>
+        <label class="layui-form-label" th:text="${username}" style="text-align: left; vertical-align: middle;"></label>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="vertical-align: middle;">真实姓名</label>
+        <label class="layui-form-label" th:text="${workUserRealName}" style="text-align: left; vertical-align: middle;"></label>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="vertical-align: middle;">性别</label>
+        <label class="layui-form-label" th:text="${workUserSex}" style="text-align: left; vertical-align: middle;"></label>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="vertical-align: middle;">家庭地址</label>
+        <label class="layui-form-label" th:text="${workUserAddress}" style="text-align: left; vertical-align: middle;"></label>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="vertical-align: middle;">年龄</label>
+        <label class="layui-form-label" th:text="${workUserAge}" style="text-align: left; vertical-align: middle;"></label>
+    </div>
+</form>
+
+
+</body>
+</html>

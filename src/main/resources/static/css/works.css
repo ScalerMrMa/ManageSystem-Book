@@ -1,0 +1,44 @@
+
+.book-card {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.imageposition {
+    margin-right: 20px;
+}
+
+.imageposition img {
+    width: 100px; /* 调整封面图片的宽度 */
+    height: auto; /* 保持高度自适应 */
+}
+
+.book-info {
+    flex: 1;
+}
+
+.book-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.book-author {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.book-description {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.btn-read {
+    padding: 5px 10px;
+    background-color: #337ab7;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+

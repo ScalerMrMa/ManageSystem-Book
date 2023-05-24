@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>全部作品</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/layui/css/style.css}">
+    <style>
+        #book-list{
+
+            width: 70%;
+        }
+        .book-card {
+
+            width: 100%;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 50px;
+            margin-left: 30%;
+        }
+
+        .imageposition {
+            margin-right: 20px;
+        }
+
+        .imageposition img {
+            width: 30%; /* 调整封面图片的宽度 */
+            height: auto; /* 保持高度自适应 */
+        }
+
+        .book-info {
+            flex: 1;
+        }
+
+        .book-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .book-author {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .book-description {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .btn-read {
+            padding: 5px 10px;
+            background-color: #337ab7;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <li class="bookCategory" data-category="全部" onclick="sendAsyncRequest(event, '全部')">全部</li>
+    <!--分类榜单-->
+    <div id="book-categories" class="book-categories">
+
+        <!-- 书籍分类将显示在这里 -->
+    </div>
+
+    <!--分类结果-->
+
+    <div id="book-list" class="book-list">
+        <!-- 书籍列表将显示在这里 -->
+    </div>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/js/jquery.js}"></script>
+
+<script>
+    layui.use(['element', 'layer', 'util'], function(){
+        var element = layui.element
+            ,layer = layui.layer
+            ,util = layui.util
+            ,$ = layui.$;
+
+        $(document).ready(function() {
+            // 获取后端数据并生成书籍卡片
+            $.ajax({
+                url: "/user/getBookCategories",
+                method: "GET",
+                success: function(response) {
+                    // 清空之前的书籍列表
+                    $("#book-categories").empty();
+
+                    // 对返回回来的状态进行一个判断，并给予不同的提示信息
+                    var books = response.data;
+                    // 根据返回的数据生成书籍卡片
+                    books.forEach(function(book) {
+                        var cardHtml = `
+                       <li class="bookCategory" data-category="${book.bookCategory}"
+                       onClick="sendAsyncRequest(event, '${book.bookCategory}')">${book.bookCategory}</li>
+
+                    `;
+
+                        $("#book-categories").append(cardHtml);
+                    });
+                },
+                error: function() {
+                    console.log("糟糕！出错了！");
+                }
+            });
+        });
+    })
+
+    function sendAsyncRequest(event, category) {
+        // 获取点击的元素
+        var element = event.target;
+
+        // 发送异步请求的URL
+        var url = "/user/getCategoriesBook";
+
+        // 构建请求数据
+        var requestData = {
+            category: category,
+        };
+
+        // 发送异步请求
+        fetch(url, {
+            method: "POST",
+            body: JSON.stringify(requestData),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(function(response) {
+                // 处理响应
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error("Network response was not ok.");
+            })
+            .then(function(data) {
+
+                // 处理返回的数据
+                var bookListElement = document.getElementById("book-list");
+                bookListElement.innerHTML = ""; // 清空之前的内容
+
+                var responseData;
+                var  books;
+                try {
+                    responseData = JSON.parse(data); // 解析返回的数据
+                    // 获取data数据
+                    books = responseData.data;
+                    // console.log(books)
+                } catch (error) {
+                    console.error("Error parsing data:", error);
+                    return;
+                }
+
+                if (!Array.isArray(books)) {
+                    console.error("Invalid data format: books is not an array");
+                    return;
+                }
+
+                books.forEach(function(book) {
+                    // 构建图书卡片的 HTML 结构
+                    var cardHtml = `
+                <div class="book-card">
+                <div class="imageposition">
+                    <img src="/images/noImage.png" alt="${book.title}">
+                </div>
+
+                <div class="book-info">
+                    <div class="book-title">${book.bookName}</div>
+                    <div class="book-author">${book.author}</div>
+                    <div class="book-description">${book.bookInformation}</div>
+                    <br>
+                    <button class="btn-read" onclick="addBookmyself(${JSON.stringify(book)})">加入书架</button>
+                    <!-- 其他图书信息 -->
+                </div>
+            </div>
+        `;
+
+                    // 将图书卡片添加到书籍列表中
+                    bookListElement.innerHTML += cardHtml;
+                });
+            })
+
+        function addBookmyself(book) {
+            $.ajax({
+                url: "/user/researchBooks",
+                method: "GET",
+                data: { keyword: keyword },
+                success: function(response) {
+                    // 清空之前的书籍列表
+                    $("#book-list").empty();
+
+                    // 对返回回来的状态进行一个判断，并给予不同的提示信息
+
+                    var books = response.data;
+                    // 根据返回的数据生成书籍卡片
+                    books.forEach(function(book) {
+                        var cardHtml = `
+                        <div class="book-card">
+                            <img class="book-cover" src="/images/noImage.png">
+                            <div class="book-details">
+                                <h3 class="book-title">${book.bookName}</h3>
+                                <p class="book-author">${book.author}</p>
+                                <p class="book-description">${book.bookInformation}</p>
+                                <button class="btn-read">开始阅读</button>
+                            </div>
+                        </div>
+                    `;
+
+                        $("#book-list").append(cardHtml);
+                    });
+                },
+                error: function() {
+                    console.log("糟糕！出错了！");
+                }
+            });
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var element = document.querySelector(".bookCategory[data-category='全部']");
+        if (element) {
+            element.click();
+        }
+    });
+</script>
+</body>
+</html>

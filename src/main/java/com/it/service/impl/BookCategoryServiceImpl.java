@@ -36,7 +36,7 @@ public class BookCategoryServiceImpl implements BookCategoryService {
         bookCategoryVo.setMsg("");
 
         // 查询记录数
-        Integer count = bookCategoryDao.selectCount(null);
+        Integer count = Math.toIntExact(bookCategoryDao.selectCount(null));
         bookCategoryVo.setCount(count);
 
         // 查询所有的分类

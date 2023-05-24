@@ -10,23 +10,19 @@
     <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
 <body>
-
-<table class="layui-hide" id="bookCategory" lay-filter="test"></table>
-
+<table class="layui-hide" id="borrowRules" lay-filter="test"></table>
 <!--头工具栏-->
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-primary" lay-event="addBorrowRule">新增</button>
-        <button class="layui-btn layui-btn-danger delAll_btn" lay-event="deleteAllBorrowRule">批量删除</button>
+        <button class="layui-btn layui-btn-danger delAll_btn" lay-event="forbidMany">批量失效</button>
     </div>
 </script>
-
 <!--行工具栏-->
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="forbid">失效</a>
 </script>
-
 <!--添加表单-->
 <script type="text/html" id="add-category">
     <div class="layui-col-md10" style="margin-left: 35px; margin-top: 20px">
@@ -53,13 +49,6 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">发布日期</label>
-                <div class="layui-input-block">
-                    <input type="date" name="publishDate" required lay-verify="required" placeholder="发布者"
-                           autoComplete="on" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit lay-filter="addBorrowRule">立即提交</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
@@ -68,7 +57,6 @@
         </form>
     </div>
 </script>
-
 <!--修改表单-->
 <script type="text/html" id="edit-borrow-rule">
     <div class="layui-col-md10" style="margin-left: 35px; margin-top: 20px">
@@ -95,13 +83,6 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">发布日期</label>
-                <div class="layui-input-block">
-                    <input type="date" name="publishDate" required lay-verify="required" placeholder="发布者"
-                           autoComplete="on" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit lay-filter="edit-btn-form">立即提交</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
@@ -110,17 +91,14 @@
         </form>
     </div>
 </script>
-
 <script th:src="@{/layui/layui.js}" charset="utf-8"></script>
-
 <!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
-
 <script>
     layui.use(['table','form','jquery','layer'], function(){
         var layer = layui.layer
             ,$ = layui.jquery,form = layui.form,table = layui.table;
         table.render({
-            elem: '#bookCategory'
+            elem: '#borrowRules'
             ,url: '/manage/borrowRuleManage'
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
             ,defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
@@ -132,11 +110,13 @@
             ,cols: [
                 [
                     {type: 'checkbox', fixed: 'left'}
-                    ,{field:'number', title:'序列号', width:220}
-                    ,{field:'publisher', title:'发布者', width:220}
-                    ,{field:'borrowRules', title:'发布规则', width:360}
-                    ,{field:'publishDate', title:'发布时间', width:300}
-                    ,,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
+                    ,{field:'number', title:'序列号', width:80}
+                    ,{field:'publisher', title:'发布者', width:120}
+                    ,{field:'borrowRules', title:'发布规则', width:300}
+                    ,{field:'publishDate', title:'发布时间', width:150}
+                    ,{field:'editDate', title:'更新时间', width:150}
+                    ,{field:'publishStatus', title:'状态', width:80}
+                    ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
                 ]
             ]
             ,page: true
@@ -167,32 +147,48 @@
                         content:$('#add-category').html()
                     });
                     break;
-                case 'deleteAllBorrowRule':
+                case 'forbidMany':
                     $(".delAll_btn").click(function () {
-                        var checkStatus = table.checkStatus('bookCategory'),
+                        var checkStatus = table.checkStatus('borrowRules'),
                             data = checkStatus.data,
-
                             numbers = "";
-
                         if (data.length > 0) {
                             for (var i in data) {
                                 numbers += data[i].number + ",";
                             }
-                            layer.confirm('确定删除选中的用户？', {icon: 3, title: '提示信息'}, function (index) {
+                            layer.confirm('确定将选中的规则状态置为失效？', {icon: 3, title: '提示信息'}, function (index) {
                                 $.ajax({
-                                    url: 'manage/deleteAllBookCategory',
-                                    type: 'DELETE',
+                                    url: 'manage/forbidManyBorrowRules',
+                                    type: 'PUT',
                                     data: {
                                         number: numbers
                                     },
                                     success: function(resultVo) {
-                                        console.log(data)
-                                        layer.msg(resultVo.msg,{
-                                            icon: 1,
-                                            time: 1000,
-                                        },function (){
-                                            parent.location.reload();
-                                        });
+                                        if (resultVo.code === 0) {
+                                            layer.msg(resultVo.msg,{
+                                                icon: 1,
+                                                time: 1000  // 1秒关闭
+                                            }, function (){
+                                                // 一秒以后进行页面重新刷新
+                                                location.reload();
+                                            });
+                                        }else if (resultVo.code === 1) {
+                                            layer.msg(resultVo.msg,{
+                                                icon: 0,
+                                                time: 1000  // 1秒关闭
+                                            }, function (){
+                                                // 一秒以后进行页面重新刷新
+                                                location.reload();
+                                            });
+                                        }else if (resultVo.code === 3) {
+                                            layer.msg(resultVo.msg,{
+                                                icon: 2,
+                                                time: 1000  // 1秒关闭
+                                            }, function (){
+                                                // 一秒以后进行页面重新刷新
+                                                location.reload();
+                                            });
+                                        }
                                         // tableIns.reload();
                                         layer.close(index);
                                     },
@@ -202,7 +198,7 @@
                                             icon: 1,
                                             time: 1000,
                                         },function (){
-                                            parent.location.reload();
+                                            location.reload();
                                         });
                                         // tableIns.reload();
                                         layer.close(index);
@@ -227,57 +223,69 @@
         table.on('tool(test)', function(obj){
             var data = obj.data;
             //console.log(obj)
-            if (obj.event === 'del') {
-                layer.confirm('确定删除图书类别信息？', {icon: 3, title: '提示信息'}, function(index) {
+            if (obj.event === 'forbid') {
+                layer.confirm('确定将当条借阅规则状态置为失效？', {icon: 3, title: '提示信息'}, function(index) {
                     $.ajax({
-                        url: 'manage/deleteBorrowRule',
-                        type: 'DELETE',
+                        url: 'manage/forbidBorrowStatus',
+                        type: 'PUT',
                         data: {
                             number: obj.data.number
                         },
                         success: function(resultVo) {
-                            console.log(resultVo)
+                            if (resultVo.code === 0) {
+                                layer.msg(resultVo.msg,{
+                                    icon: 1,
+                                    time: 1000  // 1秒关闭
+                                }, function (){
+                                    // 一秒以后进行页面重新刷新
+                                    location.reload();
+                                });
+                            }else if (resultVo.code === 1) {
+                                layer.msg(resultVo.msg,{
+                                    icon: 0,
+                                    time: 1000  // 1秒关闭
+                                }, function (){
+                                    // 一秒以后进行页面重新刷新
+                                    location.reload();
+                                });
+                            }else if (resultVo.code === 3) {
+                                layer.msg(resultVo.msg,{
+                                    icon: 2,
+                                    time: 1000  // 1秒关闭
+                                }, function (){
+                                    // 一秒以后进行页面重新刷新
+                                    location.reload();
+                                });
+                            }
+                            // tableIns.reload();
+                            layer.close(index);
+                        },
+                        error: function (resultVo) {
+                            console.log(data)
                             layer.msg(resultVo.msg,{
                                 icon: 1,
                                 time: 1000,
                             },function (){
-                                parent.location.reload();
+                                location.reload();
                             });
-                            layer.close(index);
-                        },
-                        error: function (resultVo) {
-                            layer.msg(resultVo.msg,{
-                                icon: 2,
-                                time: 1000,
-                            },function (){
-                                parent.location.reload();
-                            });
+                            // tableIns.reload();
                             layer.close(index);
                         }
-
                     });
                 });
             }else if(obj.event === 'edit'){
                 layer.open({
                     title: '编辑图书类别',
                     type: 1,
-                    area: ['440px', '330px'],
+                    area: ['660px', '550px'],
                     content: $('#edit-borrow-rule').html(), // 将表单 HTML 代码作为弹出层的内容
-                    success: function (layero,index) {
-                        form.val('editForm',{
-                            "number": obj.data.number,
-                            "publisher": obj.data.publisher,
-                            "borrowRules": obj.data.borrowRules,
-                            "publishDate": obj.data.publishDate
+                    success: function(layero, index) {
+                        form.val("editForm", {
+                            "number" : obj.data.number,
+                            "publisher" : obj.data.publisher,
+                            "borrowRules" : obj.data.borrowRules,
                         });
-                    },error: function (resultVo) {
-                        layer.msg(resultVo.msg,{
-                            icon: 2,
-                            time: 1000,
-                        },function (){
-                            parent.location.reload();
-                        });
-                        layer.close(index);
+
                     }
                 });
 
@@ -287,13 +295,31 @@
         // 修改数据
         form.on('submit(edit-btn-form)', function (data) {
             $.post("manage/updateBorrowRules", data.field, function (resultVo) {
-                layer.msg(resultVo.msg,{
-                    icon: 1,
-                    time: 1000  // 1秒关闭
-                }, function (){
-                    // 一秒以后进行页面重新刷新
-                    parent.location.reload();
-                });
+                if (resultVo.code === 0) {
+                    layer.msg(resultVo.msg,{
+                        icon: 1,
+                        time: 1000  // 1秒关闭
+                    }, function (){
+                        // 一秒以后进行页面重新刷新
+                        location.reload();
+                    });
+                }else if (resultVo.code === 1) {
+                    layer.msg(resultVo.msg,{
+                        icon: 0,
+                        time: 1000  // 1秒关闭
+                    }, function (){
+                        // 一秒以后进行页面重新刷新
+                        location.reload();
+                    });
+                }else if (resultVo.code === 3) {
+                    layer.msg(resultVo.msg,{
+                        icon: 2,
+                        time: 1000  // 1秒关闭
+                    }, function (){
+                        // 一秒以后进行页面重新刷新
+                        location.reload();
+                    });
+                }
             }).fail(function() {
                 layer.alert('修改失败!', {icon: 2});
             });
@@ -310,7 +336,7 @@
                     time: 1000  // 1秒关闭
                 }, function (){
                     // 一秒以后进行页面重新刷新
-                    parent.location.reload();
+                    location.reload();
                 });
             }).fail(function() {
                 layer.alert('添加失败!', {icon: 2});
@@ -321,6 +347,5 @@
 
     });
 </script>
-
 </body>
 </html>

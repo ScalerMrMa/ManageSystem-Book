@@ -1,0 +1,52 @@
+/* 导航栏样式 */
+.navbar {
+    background-color: #000;
+    color: #fff;
+    padding: 10px;
+}
+
+.nav-links {
+    list-style-type: none;
+    display: flex;
+    justify-content: space-around;
+}
+
+.nav-links li {
+    margin-right: 10px;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* 内容主体区域样式 */
+.main {
+    margin: 20px;
+}
+
+/* 搜索栏样式 */
+.search-bar {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.search-bar input[type="text"] {
+    padding: 10px;
+    width: 300px;
+}
+
+.search-bar button {
+    padding: 10px 20px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+/* 响应式样式 */
+@media screen and (max-width: 768px) {
+    .search-bar input[type="text"] {
+        width: 100%;
+    }
+}

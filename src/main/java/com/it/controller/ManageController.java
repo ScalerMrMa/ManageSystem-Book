@@ -2,13 +2,16 @@ package com.it.controller;
 
 import com.it.domain.*;
 import com.it.service.*;
+import com.it.statistics.DataItem;
 import com.it.vo.DataVo;
 import com.it.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author MrMa
@@ -20,6 +23,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/manage")
 public class ManageController {
+
+    @Autowired
+    DataStatisticsService dataStatisticsService;
 
     @Autowired
     private BookInfoService bookInfoService;
@@ -35,6 +41,9 @@ public class ManageController {
 
     @Autowired
     private AnnouncementService announcementService;
+
+    @Autowired
+    private WorkUserService workUserService;
 
     // ----------------------------------查询专区---------------------------------------------------
     /**
@@ -84,7 +93,30 @@ public class ManageController {
         return announcementService.selectAnnouncement();
     }
 
+    /**
+     * 获取图书管理员信息
+     * @param workUserName
+     * @return
+     */
+    @GetMapping("/getWorkUsers")
+    @ResponseBody
+    public DataVo<WorkUser> getWorkUsers(String workUserName) {
+        return workUserService.getWorkUsers(workUserName);
+    }
     //------------------------------------添加功能---------------------------------------------
+
+    /**
+     * 添加员工的信息
+     * @param workUser
+     * @return
+     */
+    @RequestMapping("/addWorkUserInfo")
+    @ResponseBody
+    public ResultVo addInnerUserInfo(WorkUser workUser) {
+
+        return workUserService.addWorkUserInfo(workUser);
+    }
+
 
     /**
      * 添加图书信息
@@ -195,11 +227,11 @@ public class ManageController {
      * @param numbers
      * @return
      */
-    @RequestMapping("/deleteAllBookCategory")
+    @RequestMapping("/forbidManyBorrowRules")
     @ResponseBody
     public ResultVo deleteAllBorrowManage(@RequestParam("number") List<Integer> numbers) {
 
-        return borrowRuleManageService.deleteAllBorrowManage(numbers);
+        return borrowRuleManageService.forbidManyBorrowRules(numbers);
     }
 
     /**
@@ -207,29 +239,63 @@ public class ManageController {
      * @param number
      * @return
      */
-    @RequestMapping("/deleteBorrowRule")
+    @RequestMapping("/forbidBorrowStatus")
     @ResponseBody
-    public ResultVo deleteBorrowRule(Integer number) {
+    public ResultVo forbidBorrowStatus(Integer number) {
 
-        return borrowRuleManageService.deleteBorrowRule(number);
+        return borrowRuleManageService.forbidBorrowStatus(number);
+    }
+
+
+    @RequestMapping("forbidStatus")
+    @ResponseBody
+    public ResultVo forbidStatus(Integer publishNumber) {
+        return announcementService.forbidStatus(publishNumber);
     }
 
     /**
-     * 根据发布序号删除发布内容
+     * 根据发布序号批量将发布内容状态设置为失效
      * @param     @ResponseBody
      *     public ResultVo deleteAnnouncement(Integer publishNumber) {
      * @return
      */
-    @RequestMapping("deleteAnnouncement")
+    @RequestMapping("forbidManyStatus")
     @ResponseBody
-    public ResultVo deleteAnnouncement(Integer publishNumber) {
-        return announcementService.deleteAnnouncement(publishNumber);
+    public ResultVo forbidManyStatus(@RequestParam("publishNumber") List<Integer> publishNUmbers) {
+        return announcementService.forbidManyStatus(publishNUmbers);
     }
 
-    @RequestMapping("deleteManyAnnouncement")
+    /**
+     * 批量禁用工作人员账户状态
+     * @param workUserIds
+     * @return
+     */
+    @RequestMapping("/forbidWorkUsers")
     @ResponseBody
-    public ResultVo deleteManyAnnouncement(@RequestParam("publishNumber") List<Integer> publishNUmbers) {
-        return announcementService.deleteManyAnnouncement(publishNUmbers);
+    public ResultVo forbidWorkUsers(@RequestParam("workUserId") List<String> workUserIds) {
+        return workUserService.forbidWorkUsers(workUserIds);
+    }
+
+    /**
+     * 激活用户
+     * @param workUserId
+     * @return
+     */
+    @RequestMapping("/activeWorkUser")
+    @ResponseBody
+    public ResultVo activeWorkUser(@RequestParam("workUserId") String workUserId) {
+
+        return workUserService.activeWorkUser(workUserId);
+    }
+    /**
+     * 禁用用户
+     * @param workUserId
+     * @return
+     */
+    @RequestMapping("/forbidWorkUser")
+    @ResponseBody
+    public ResultVo forbidWorkUser(@RequestParam("workUserId") String workUserId) {
+        return workUserService.forbidWorkUser(workUserId);
     }
     // ------------------------------------修改专区---------------------------------------
 
@@ -265,6 +331,33 @@ public class ManageController {
     @ResponseBody
     public ResultVo borrowRuleManage(BorrowRuleManage borrowRuleManage) {
         return borrowRuleManageService.borrowRuleManage(borrowRuleManage);
+    }
+
+    /**
+     * 修改图书管理员信息
+     * @param workUser
+     * @return
+     */
+    @RequestMapping("/updateWorkUserInfo")
+    @ResponseBody
+    public ResultVo updateWorkUserInfo(WorkUser workUser) {
+        return workUserService.updateWorkUserInfo(workUser);
+    }
+
+    //  -------------------------------------------数据展示专区----------------------------------
+
+    /**
+     * 图书数量展示
+     * @return
+     */
+    @RequestMapping("/ECharting")
+    @ResponseBody
+    public Map<String, List<DataItem>> viewData() {
+        Map<String, List<DataItem>> response = new HashMap<>();
+        System.out.println(response);
+        List<DataItem> source = dataStatisticsService.statistic();
+        response.put("dataset", source);
+        return response;
     }
 
 }

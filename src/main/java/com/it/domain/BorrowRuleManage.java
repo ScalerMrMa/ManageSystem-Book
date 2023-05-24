@@ -9,9 +9,10 @@ import lombok.Data;
  */
 @Data
 public class BorrowRuleManage {
-
-    private Integer number;         // 序号
+    private Long number;         // 序号
     private String publisher;       // 发布者
     private String borrowRules;     // 图书借阅规则
     private String publishDate;       // 发布日期
+    private String editDate;        // 修改日期
+    private String publishStatus;   // 状态
 }

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/layui/css/style.css}">
+
+</head>
+<body>
+    <!--搜索框-->
+    <div class="search-container">
+        <div class="layui-form search-box">
+            <input type="text" class="search-input" placeholder="搜索">
+
+            <i class="layui-icon layui-icon-search search-icon"></i>
+
+        </div>
+    </div>
+
+    <!--搜索结果-->
+
+    <div id="book-list" class="book-list">
+        <!-- 书籍列表将显示在这里 -->
+    </div>
+
+    <!-- 书籍推荐 -->
+    <div class="recommend-books">
+        <h2 class="section-title">为您推荐</h2>
+        <div class="book-list">
+            <div class="book-card">
+                <img class="book-cover" src="https://img.zcool.cn/community/01a30a57fb4650a84a0d304f78be80.jpg@1280w_1l_2o_100sh.jpg" alt="Book 1">
+                <div class="book-details">
+                    <h3 class="book-title">红楼梦</h3>
+                    <p class="book-author">曹雪清</p>
+                    <p class="book-description">
+                        小说《红楼梦》是中国古代长篇小说的巅峰之作，曹雪芹所创造的艺术形象极其丰满，他所表现的人物关系也异常复杂。
+                    </p>
+                    <button class="btn-read">开始阅读</button>
+                </div>
+            </div>
+            <!-- 第二本 -->
+            <div class="book-card">
+                <img class="book-cover" src="https://img.zcool.cn/community/01765955e5266432f875a13280457a.jpg@1280w_1l_2o_100sh.jpg" alt="Book 2">
+                <div class="book-details">
+                    <h3 class="book-title">三国演义</h3>
+                    <p class="book-author">罗贯中</p>
+                    <p class="book-description">
+                        《三国演义》是中国文学史上第一部章回小说，是历史演义小说的开山之作，也是一部文人长篇小说，明清时期甚至有“第一才子书”之称。 [1] 自问世以来，取材于它的各类文艺作品不胜枚举。它的巨大影响力，以至于使艺术的真实盖过了历史的真实。</p>
+                    <button class="btn-read">开始阅读</button>
+                </div>
+            </div>
+            <!--第三本-->
+            <div class="book-card">
+                <img class="book-cover" src="https://img.zcool.cn/community/0189e6563353696ac7259e0f7f5c32.jpg@2o.jpg" alt="Book 2">
+                <div class="book-details">
+                    <h3 class="book-title">西游记</h3>
+                    <p class="book-author">吴承恩</p>
+                    <p class="book-description">
+                        《西游记》是中国神魔小说的经典之作，达到了古代长篇浪漫主义小说的巅峰，与《三国演义》《水浒传》《红楼梦》并称为中国古典四大名著
+                    </p>
+                    <button class="btn-read">开始阅读</button>
+                </div>
+            </div>
+            <!--第三本-->
+            <div class="book-card">
+                <img class="book-cover" src="https://img.zcool.cn/community/01b8cb5cd398eea801208f8b71303e.jpg@3000w_1l_0o_100sh.jpg" alt="Book 1">
+                <div class="book-details">
+                    <h3 class="book-title">水浒传</h3>
+                    <p class="book-author">施耐庵</p>
+                    <p class="book-description">
+                        水浒传》是中国古典四大名著之一，问世后，在社会上产生了巨大的影响，成为后世中国小说创作的典范。《水浒传》是中国历史上最早用白话文写成的章回小说之一，流传极广，脍炙人口；同时也是汉语言文学中具备史诗特征的作品之一，对中国乃至东亚的叙事文学都有深远的影响。</p>
+                    <button class="btn-read">开始阅读</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/js/jquery.js}"></script>
+<script>
+    layui.use(['element', 'layer', 'util'], function(){
+        var element = layui.element
+            ,layer = layui.layer
+            ,util = layui.util
+            ,$ = layui.$;
+
+
+        $(document).ready(function() {
+            // 书籍数据的URL（替换成您的后端数据接口URL）
+
+            // 获取后端数据并生成书籍卡片
+            function getBooks(keyword) {
+                $.ajax({
+                    url: "/user/researchBooks",
+                    method: "GET",
+                    data: { keyword: keyword },
+                    success: function(response) {
+                        // 清空之前的书籍列表
+                        $("#book-list").empty();
+
+                        // 对返回回来的状态进行一个判断，并给予不同的提示信息
+
+                        var books = response.data;
+                        // 根据返回的数据生成书籍卡片
+                        books.forEach(function(book) {
+                            var cardHtml = `
+                        <div class="book-card">
+                            <img class="book-cover" src="/images/noImage.png">
+                            <div class="book-details">
+                                <h3 class="book-title">${book.bookName}</h3>
+                                <p class="book-author">${book.author}</p>
+                                <p class="book-description">${book.bookInformation}</p>
+                                <button class="btn-read">开始阅读</button>
+                            </div>
+                        </div>
+                    `;
+
+                            $("#book-list").append(cardHtml);
+                        });
+                    },
+                    error: function() {
+                        console.log("糟糕！出错了！");
+                    }
+                });
+            }
+
+            // 初始加载默认数据（四大名著）
+            getBooks("");
+
+            // 搜索按钮点击事件
+            // 搜索框按下回车键事件
+            $(".search-input").keydown(function(event) {
+                console.log("keydown event triggered");
+                if (event.keyCode === 13) { // 13 表示回车键
+                    var keyword = $(this).val().trim();
+                    getBooks(keyword);
+                }
+            });
+        });
+    })
+
+
+</script>
+</body>
+</html>

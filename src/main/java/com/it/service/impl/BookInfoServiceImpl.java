@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 public class BookInfoServiceImpl implements BookInfoService {
     @Autowired
-    private BookInfoDao BookInfoDao;
+    private BookInfoDao bookInfoDao;
     /**
      * 搜索、信息展示
      * @param bookName
@@ -44,8 +44,8 @@ public class BookInfoServiceImpl implements BookInfoService {
             if (bookName != null) {
                 lambdaQueryWrapper.like(BookInfo::getBookName, bookName);
             }
-            BookInfoList = BookInfoDao.selectList(lambdaQueryWrapper);
-            count = BookInfoDao.selectCount(lambdaQueryWrapper);
+            BookInfoList = bookInfoDao.selectList(lambdaQueryWrapper);
+            count = Math.toIntExact(bookInfoDao.selectCount(lambdaQueryWrapper));
             dataVo.setCode(0);
             dataVo.setMsg("查询成功");
             dataVo.setCount(count);
@@ -81,7 +81,7 @@ public class BookInfoServiceImpl implements BookInfoService {
             bookInfo.setRegistrationDate(format);
             bookInfo.setBookStatus("上架");
 
-            int insert = BookInfoDao.insert(bookInfo);
+            int insert = bookInfoDao.insert(bookInfo);
             if (insert != 0) {
                 resultVo.setCode(0);
                 resultVo.setMsg("添加成功！");
@@ -111,7 +111,7 @@ public class BookInfoServiceImpl implements BookInfoService {
         LambdaQueryWrapper<BookInfo> BookInfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
         BookInfoLambdaQueryWrapper.in(BookInfo::getIsbn, isbns);
         // 获取对象
-        List<BookInfo> BookInfoList = BookInfoDao.selectList(BookInfoLambdaQueryWrapper);
+        List<BookInfo> BookInfoList =bookInfoDao.selectList(BookInfoLambdaQueryWrapper);
         // 创建结果集
         ResultVo resultVo = new ResultVo();
         try {
@@ -122,7 +122,7 @@ public class BookInfoServiceImpl implements BookInfoService {
                     return resultVo;
                 }
             }
-            int updateCount = BookInfoDao.update(null, lambdaUpdateWrapper);
+            int updateCount = bookInfoDao.update(null, lambdaUpdateWrapper);
             if (updateCount > 0) {
                 resultVo.setCode(0);
                 resultVo.setMsg("操作成功！");
@@ -146,7 +146,7 @@ public class BookInfoServiceImpl implements BookInfoService {
         LambdaUpdateWrapper<BookInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
         lambdaUpdateWrapper.eq(BookInfo::getIsbn, isbn);
         // 根据id查询出图书
-        BookInfo bookInfo = BookInfoDao.selectOne(lambdaUpdateWrapper);
+        BookInfo bookInfo = bookInfoDao.selectOne(lambdaUpdateWrapper);
 
         // 构造操作结果
         ResultVo resultVo = new ResultVo();
@@ -157,7 +157,7 @@ public class BookInfoServiceImpl implements BookInfoService {
                 resultVo.setMsg("当前图书已下架！");
             }else {
                 lambdaUpdateWrapper.set(BookInfo::getBookStatus, "下架");
-                int update = BookInfoDao.update(bookInfo, lambdaUpdateWrapper);
+                int update = bookInfoDao.update(bookInfo, lambdaUpdateWrapper);
                 if (update != 0) {
                     resultVo.setCode(0);
                     resultVo.setMsg("已下架！");
@@ -186,7 +186,7 @@ public class BookInfoServiceImpl implements BookInfoService {
         LambdaUpdateWrapper<BookInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
         lambdaUpdateWrapper.eq(BookInfo::getIsbn, isbn);
         // 根据id查询出图书
-        BookInfo bookInfo = BookInfoDao.selectOne(lambdaUpdateWrapper);
+        BookInfo bookInfo = bookInfoDao.selectOne(lambdaUpdateWrapper);
 
         // 构造操作结果
         ResultVo resultVo = new ResultVo();
@@ -197,7 +197,7 @@ public class BookInfoServiceImpl implements BookInfoService {
                 resultVo.setMsg("当前图书已上架！");
             }else{
                 lambdaUpdateWrapper.set(BookInfo::getBookStatus, "上架");
-                int update = BookInfoDao.update(null, lambdaUpdateWrapper);
+                int update = bookInfoDao.update(null, lambdaUpdateWrapper);
                 if (update != 0) {
                     resultVo.setCode(0);
                     resultVo.setMsg("已上架！");
@@ -227,7 +227,7 @@ public class BookInfoServiceImpl implements BookInfoService {
         LambdaUpdateWrapper<BookInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
         lambdaUpdateWrapper.eq(BookInfo::getIsbn, bookInfo.getIsbn());
         // 通过Id获取图书的基础信息
-        BookInfo baseBookInfo = BookInfoDao.selectOne(lambdaUpdateWrapper);
+        BookInfo baseBookInfo = bookInfoDao.selectOne(lambdaUpdateWrapper);
         bookInfo.setRegistrationDate(baseBookInfo.getRegistrationDate());
         bookInfo.setBookStatus(baseBookInfo.getBookStatus());
 
@@ -241,7 +241,7 @@ public class BookInfoServiceImpl implements BookInfoService {
                 return resultVo;
             }
             // 如果前端传来的BookInfo的密码为null，那么就从数据库中将原来的密码查询出来
-            int update = BookInfoDao.update(bookInfo, lambdaUpdateWrapper);
+            int update = bookInfoDao.update(bookInfo, lambdaUpdateWrapper);
             if (update > 0) {
                 resultVo.setCode(0);
                 resultVo.setMsg("操作成功！");
@@ -261,7 +261,93 @@ public class BookInfoServiceImpl implements BookInfoService {
     // 获取图书数目
     @Override
     public Integer getBookInfoCount() {
-        Integer bookInfoCount = BookInfoDao.selectCount(null);
+        Integer bookInfoCount = Math.toIntExact(bookInfoDao.selectCount(null));
         return bookInfoCount;
     }
+
+    /**
+     * 根据关键字搜索书籍信息
+     * @return
+     */
+    @Override
+    public DataVo<BookInfo> getSearchBookInfo(String keyword) {
+        // 创建条件构造器
+        LambdaQueryWrapper<BookInfo> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        // 为了简单，就只是进行图书名称模糊查询
+        lambdaQueryWrapper.like(BookInfo::getBookName, keyword);
+
+        // 创建返回结果类
+        DataVo<BookInfo> dataVo = new DataVo<>();
+        // 创建列表接收查询结果
+        List<BookInfo> bookInfos = null;
+        try {
+            // 根据keyword进行一次判断,如果是空字符串，就不查询了
+            if (keyword.equals("")) {
+                return dataVo;
+            }
+
+            bookInfos = bookInfoDao.selectList(lambdaQueryWrapper);
+            if (bookInfos.size() == 0) {
+                dataVo.setCode(1);  // 状态码,此状态码表示没有查找到相关内容
+                dataVo.setMsg("抱歉！没有找到您想要的信息！");
+                dataVo.setCount(0);
+                dataVo.setData(bookInfos);
+            }else {
+                dataVo.setCode(0);  // 状态码,此状态码表示查询成功
+                dataVo.setMsg("查询成功！");
+                dataVo.setCount(bookInfos.size());
+                dataVo.setData(bookInfos);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            dataVo.setCode(2);  // 状态码,此状态码表示异常
+            dataVo.setMsg("糟糕！错误了！");
+            dataVo.setCount(0);
+        }
+        return dataVo;
+    }
+
+    /**
+     * 根据参数，查询对应数据
+     * @param requestData
+     * @return
+     */
+    @Override
+    public DataVo<BookInfo> getCategoriesBook(String requestData) {
+        // 创建条件构造器
+        LambdaQueryWrapper<BookInfo> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        //  创建结果返回集
+        DataVo<BookInfo> bookInfoDataVo = new DataVo<>();
+        try {
+            if (requestData.equals("全部")) {
+                // 查询条目数
+                Integer count = Math.toIntExact(bookInfoDao.selectCount(lambdaQueryWrapper));
+                // 查询结果
+                List<BookInfo> bookInfos = bookInfoDao.selectList(lambdaQueryWrapper);
+                bookInfoDataVo.setCode(0);
+                bookInfoDataVo.setMsg("查询成功！");
+                bookInfoDataVo.setCount(count);
+                bookInfoDataVo.setData(bookInfos);
+            }else {
+                lambdaQueryWrapper.like(BookInfo::getBookCategory, requestData);
+                Integer count = Math.toIntExact(bookInfoDao.selectCount(lambdaQueryWrapper));
+                // 查询结果
+                List<BookInfo> bookInfos = bookInfoDao.selectList(lambdaQueryWrapper);
+                bookInfoDataVo.setCode(0);
+                bookInfoDataVo.setMsg("查询成功！");
+                bookInfoDataVo.setCount(count);
+                bookInfoDataVo.setData(bookInfos);
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            bookInfoDataVo.setCode(3);
+            bookInfoDataVo.setMsg("查询失败！");
+            bookInfoDataVo.setCount(0);
+            bookInfoDataVo.setData(null);
+        }
+        return bookInfoDataVo;
+    }
+
+
 }

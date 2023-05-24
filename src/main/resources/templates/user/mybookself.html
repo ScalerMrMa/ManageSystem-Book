@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>全部作品</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/layui/css/style.css}">
+    <style>
+        .account {
+            margin-bottom
+            : 50px;
+            padding: 30px;
+            color: white;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+        <div class="account">
+            <label class="layui-form-label" th:text="${userName}" style="text-align: left; vertical-align: middle;"></label>
+        </div>
+
+        <div id="book-list" class="book-list">
+            <!-- 书籍列表将显示在这里 -->
+        </div>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/js/jquery.js}"></script>
+
+<script>
+    layui.use(['element', 'layer', 'util'], function(){
+        var element = layui.element
+            ,layer = layui.layer
+            ,util = layui.util
+            ,$ = layui.$;
+
+        $(document).ready(function() {
+            // 获取后端数据并生成书籍卡片
+            $.ajax({
+                url: "/user/getMyBookSelf",
+                method: "GET",
+                success: function(response) {
+                    // 清空之前的书籍列表
+                    $("#book-list").empty();
+
+                    // 对返回回来的状态进行一个判断，并给予不同的提示信息
+                    var books = response.data;
+                    // 根据返回的数据生成书籍卡片
+                    books.forEach(function(book) {
+                        var cardHtml = `
+
+                <div class="book-card">
+                <div class="imageposition">
+                    <img src="/images/noImage.png" alt="${book.title}">
+                </div>
+
+                <div class="book-info">
+                    <div class="book-title">${book.bookName}</div>
+                    <div class="book-author">${book.author}</div>
+                    <div class="book-description">${book.bookInformation}</div>
+                    <br>
+                    <button class="btn-read" onclick="addBookmyself(${JSON.stringify(book)})">加入书架</button>
+                    <!-- 其他图书信息 -->
+                </div>
+            </div>
+                    `;
+
+                        $("#book-list").append(cardHtml);
+                    });
+                },
+                error: function() {
+                    console.log("糟糕！出错了！");
+                }
+            });
+        });
+    })
+
+</script>
+</body>
+</html>

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author MrMa
@@ -23,6 +24,9 @@ public class LogController {
 
     @Autowired
     LogService logService;
+
+    @Autowired
+    HttpSession httpSession;
 
     // 事务管理器
     @Resource
@@ -44,8 +48,10 @@ public class LogController {
         // 进行判断，如果用户名和密码正确，则将用户信息存入session，并跳转到主页
         if (checkUser != null && checkUser.getPassword().equals(user.getPassword())) {
             if (checkUser.getIdentity().equals("管理员")) {
+                httpSession.setAttribute("email", email);
                 return "adminHomePage";
             }else {
+                httpSession.setAttribute("email", email);
                 return "userHomePage";
             }
         } else {

@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @Slf4j
 //@EnableTransactionManagement
 public class ManageSystemBookApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(ManageSystemBookApplication.class, args);
     }

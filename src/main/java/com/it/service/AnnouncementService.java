@@ -18,7 +18,10 @@ public interface AnnouncementService {
     // 新增功能
     ResultVo insertAnnouncement(Announcement announcement);
     // 删除功能
-    ResultVo deleteAnnouncement(Integer publishNumber);
+    ResultVo forbidStatus(Integer publishNumber);
     // 批量删除功能
-    ResultVo deleteManyAnnouncement(List<Integer> integers);
+    ResultVo forbidManyStatus(List<Integer> integers);
+
+    // 用户端获取公告
+    public DataVo<Announcement> getAnnouncements();
 }

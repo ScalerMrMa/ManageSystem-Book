@@ -20,11 +20,13 @@ public interface BorrowRuleManageService {
     ResultVo addBorrowRuleManage(BorrowRuleManage borrowRuleManage);
 
     // 批量删除图书借阅规则
-    ResultVo deleteAllBorrowManage(List<Integer> numbers);
+    ResultVo forbidManyBorrowRules(List<Integer> numbers);
 
     // 删除单挑图书借阅规则
-    ResultVo deleteBorrowRule(Integer number);
+    ResultVo forbidBorrowStatus(Integer number);
 
     // 更新图书借阅规则
     ResultVo borrowRuleManage(BorrowRuleManage borrowRuleManage);
+
+    public DataVo<BorrowRuleManage> getRules();
 }
