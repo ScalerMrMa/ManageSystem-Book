@@ -1,7 +1,9 @@
 package com.it.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.it.dao.ReaderInfoDao;
 import com.it.dao.WorkUserDao;
+import com.it.domain.ReaderInfo;
 import com.it.domain.WorkUser;
 import com.it.service.DataStatisticsService;
 import com.it.service.LogService;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +25,10 @@ import java.util.List;
 @Controller
 @RequestMapping("/")
 public class TransitController {
+    @Autowired
+    ReaderInfoDao readerInfoDao;
+
+
     @Autowired
     private DataStatisticsService dataStatisticsService;
 
@@ -43,6 +50,27 @@ public class TransitController {
         modelAndView.addObject("userCount", list.get(1));
         modelAndView.addObject("publishCount", list.get(2));
         modelAndView.addObject("authorCount", list.get(3));
+        return modelAndView;
+    }
+
+    @GetMapping("adminhomepage")
+    public ModelAndView toAdminhomepage() {
+        ModelAndView modelAndView = new ModelAndView("admin/adminhomepage");
+        List<Integer> list = new ArrayList<>();
+
+        LambdaQueryWrapper<ReaderInfo> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(ReaderInfo::getStatus, "启用");
+        Long userCount = readerInfoDao.selectCount(lambdaQueryWrapper);
+
+        LambdaQueryWrapper<WorkUser> workUserLambda = new LambdaQueryWrapper<>();
+        workUserLambda.eq(WorkUser::getWorkUserAccountStatus, "启用");
+        Long workUserCount = workUserDao.selectCount(workUserLambda);
+
+        list.add(userCount.intValue());
+        list.add(workUserCount.intValue());
+
+        modelAndView.addObject("userCount",list.get(0));
+        modelAndView.addObject("workUserCount",list.get(1));
         return modelAndView;
     }
 
@@ -141,6 +169,11 @@ public class TransitController {
     @GetMapping("workUserManage")
     public String toWorkUserManage() {
         return "admin/workUserManage";
+    }
+
+    @GetMapping("userManage")
+    public String toUserManage() {
+        return "admin/userManage";
     }
 
 

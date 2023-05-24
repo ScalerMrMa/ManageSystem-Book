@@ -15,14 +15,7 @@
 <table class="layui-hide" id="workUserInfo" lay-filter="test"></table>
 <!--搜索框-->
 <script type="text/html" id="toolbarDemo">
-    <div class="layui-btn-container" style="float: left">
-        <button id="addBtn" type="button" class="layui-btn layui-btn-primary" lay-event="addworkUser">
-            <i class="layui-icon layui-icon-add-circle-fine">&nbsp;&nbsp;新增</i>
-        </button>
-        <button id="del" type="button" class="layui-btn layui-btn-danger delAll_btn" lay-event="forbidWorkUsers">
-            <i class="layui-icon layui-icon-close">&nbsp;&nbsp;批量禁用</i>
-        </button>
-    </div>
+
     <div class="demoTable">
         &nbsp;&nbsp;用户查询
         <div class="layui-inline">
@@ -35,104 +28,10 @@
 </script>
 <!--行操作-->
 <script type="text/html" id="barDemo">
-    <a id="editBtn" class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="active">启用</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="forbid">禁用</a>
 </script>
 <!--添加表单-->
-<script type="text/html" id="add-workInfo">
-    <div class="layui-col-md10" style="margin-left: 35px; margin-top: 20px">
-        <form class="layui-form" action="">
-            <div class="layui-form-item">
-                <label class="layui-form-label">用户名</label>
-                <div class="layui-input-block">
-                    <input type="text" name="username" required lay-verify="required" placeholder="请输入用户名" autoComplete="off"
-                           class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">真实姓名</label>
-                <div class="layui-input-block">
-                    <input type="text" name="workUserRealName" required lay-verify="required" placeholder="请输入姓名" autoComplete="off"
-                           class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">用户密码</label>
-                <div class="layui-input-block">
-                    <input type="password" name="workUserPassword" required lay-verify="required" placeholder="请输入密码" autoComplete="off"
-                           class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">性别</label>
-                <div class="layui-input-block">
-                    <input type="radio" name="workUserSex" value="男" title="男" checked="">
-                    <input type="radio" name="workUserSex" value="女" title="女">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">现居地址</label>
-                <div class="layui-input-block">
-                    <input type="text" name="workUserAddress" required lay-verify="required" placeholder="请输入地址" autoComplete="off"
-                           class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">年龄</label>
-                <div class="layui-input-block">
-                    <input type="number" name="workUserAge" required lay-verify="required" placeholder="请输入年龄" autoComplete="off"
-                           class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">账户状态</label>
-                <div class="layui-input-block">
-                    <select name="workUserAccountStatus" lay-verify="required" lay-search>
-                        <option value=""></option>
-                        <option value="启用">启用</option>
-                        <option value="禁用">禁用</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">身份</label>
-                <div class="layui-input-block">
-                    <select name="workUserIdentity" lay-verify="required" lay-search>
-                        <option value=""></option>
-                        <option value="工作人员">工作人员</option>
-                        <option value="管理员">管理员</option>
-                    </select>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">工作状态</label>
-                <div class="layui-input-block">
-                    <select name="workUserWorkStatus" lay-verify="required" lay-search>
-                        <option value=""></option>
-                        <option value="上班">上班</option>
-                        <option value="休假">休假</option>
-                    </select>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">入职时间</label>
-                <div class="layui-input-block">
-                    <input type="date" name="workUserJobTime" required lay-verify="required" placeholder="请输入入职时间" autoComplete="off"
-                           class="layui-input">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <div class="layui-input-block" style="text-align: center">
-                    <button class="layui-btn" lay-submit lay-filter="addForm">提交</button>
-                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</script>
 
 <!--删除按钮-->
 <script type="text/html" id="delete-form">
@@ -151,107 +50,6 @@
     </div>
 </script>
 <!--编辑表单-->
-<script type="text/html" id="edit-workInfo">
-    <div class="layui-col-md10" style="margin-left: 35px; margin-top: 20px">
-        <form class="layui-form" action="" lay-filter="editForm">
-            <div class="layui-form-item">
-                <label class="layui-form-label">ID</label>
-                <div class="layui-input-block">
-                    <input type="text" name="workUserId" required lay-verify="required" autoComplete="off"
-                           disabled style="color: darkgray"
-                           class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">用户名</label>
-                <div class="layui-input-block">
-                    <input type="text" name="username" required lay-verify="required" placeholder="请输入用户名" autoComplete="off"
-                           class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">真实姓名</label>
-                <div class="layui-input-block">
-                    <input type="text" name="workUserRealName" required lay-verify="required" placeholder="请输入姓名" autoComplete="off"
-                           class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">用户密码</label>
-                <div class="layui-input-block">
-                    <input type="password" name="workUserPassword" required lay-verify="required" placeholder="请输入密码" autoComplete="off"
-                           class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">性别</label>
-                <div class="layui-input-block">
-                    <input type="radio" name="workUserSex" value="男" title="男" checked="">
-                    <input type="radio" name="workUserSex" value="女" title="女">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">现居地址</label>
-                <div class="layui-input-block">
-                    <input type="text" name="workUserAddress" required lay-verify="required" placeholder="请输入地址" autoComplete="off"
-                           class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">年龄</label>
-                <div class="layui-input-block">
-                    <input type="number" name="workUserAge" required lay-verify="required" placeholder="请输入年龄" autoComplete="off"
-                           class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">账户状态</label>
-                <div class="layui-input-block">
-                    <select name="workUserAccountStatus" lay-verify="required" lay-search>
-                        <option value=""></option>
-                        <option value="启用">启用</option>
-                        <option value="禁用">禁用</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">身份</label>
-                <div class="layui-input-block">
-                    <select name="workUserIdentity" lay-verify="required" lay-search>
-                        <option value=""></option>
-                        <option value="工作人员">工作人员</option>
-                        <option value="管理员">管理员</option>
-                    </select>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">工作状态</label>
-                <div class="layui-input-block">
-                    <select name="workUserWorkStatus" lay-verify="required" lay-search>
-                        <option value=""></option>
-                        <option value="上班">上班</option>
-                        <option value="休假">休假</option>
-                    </select>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">入职时间</label>
-                <div class="layui-input-block">
-                    <input type="date" name="workUserJobTime" required lay-verify="required" placeholder="请输入入职时间" autoComplete="off"
-                           class="layui-input">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <div class="layui-input-block" style="text-align: center">
-                    <button class="layui-btn" lay-submit lay-filter="edit-btn-form">提交</button>
-                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</script>
 <!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
 <script>
     layui.use(['table','form','jquery','layer'], function(){
@@ -260,7 +58,7 @@
         var form = layui.form;
         table.render({
             elem: '#workUserInfo'
-            ,url: '/manage/getWorkUsers'
+            ,url: '/manage/getAllUsers'
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
             ,defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
                 title: '提示'
@@ -270,18 +68,14 @@
             ,title: '工作人员信息表'
             ,cols: [
                 [
-                    {type: 'checkbox', fixed: 'left'}
-                    ,{field:'workUserId', title:'ID', width:120,}
+        {type: 'checkbox', fixed: 'left'}
+                    ,{field:'readerId', title:'ID', width:120,}
                     ,{field:'username', title:'用户名', width:120 }
-                    ,{field:'workUserRealName', title:'真实姓名', width:100}
-                    ,{field:'workUserSex', title:'性别', width:100}
-                    ,{field:'workUserAddress', title:'家庭地址', width:100}
+                    ,{field:'readerName', title:'真实姓名', width:100}
+                    ,{field:'gender', title:'性别', width:100}
                     ,{field:'workUserAge', title:'年龄', width:150}
-                    ,{field:'workUserIdentity', title:'身份', width: 150}
-                    ,{field:'workUserJobTime', title:'入职时间', width: 150}
-                    ,{field:'workUserResignTime', title:'离职时间', width: 150}
-                    ,{field:'workUserWorkStatus', title:'工作状态', width:120}
-                    ,{field:'workUserAccountStatus', title:'账户状态', width:120}
+                    ,{field:'registrationDate', title:'注册时间', width: 150}
+                    ,{field:'status', title:'账户状态', width:120}
                     
                     ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:170}
                 ]
@@ -299,147 +93,18 @@
                 return {"code": res.code, "msg": res.msg, "count": res.count, "data": result};
             }
         });
-        //头工具栏事件
-        table.on('toolbar(test)', function(obj){
-            var checkStatus = table.checkStatus(obj.config.id);
-            switch(obj.event){
-                case 'addworkUser':
-                    var data = checkStatus.data;
-                    layer.open({
-                        title: "添加员工信息",
-                        type: 1,
-                        area: ['660px', '600px'],
-                        content: $('#add-workInfo').html(),
-                        // 添加了这段后，单选框和下拉框才能正常显示
-                        success: function(layero, index) {
-                            // 在打开弹窗之后，手动渲染表单
-                            layui.use(['form'], function() {
-                                var form = layui.form;
-                                form.render();
-                            });
-                        }
-                    });
-                    break;
-                case 'forbidWorkUsers':
-                    $(".delAll_btn").click(function () {
-                        var checkStatus = table.checkStatus('workUserInfo'),
-                            data = checkStatus.data,
-                            workUserIds = "";
-                        if (data.length > 0) {
-                            for (var i in data) {
-                                workUserIds += data[i].workUserId + ",";
-                            }
-                            layer.msg(workUserIds)
-                            layer.confirm('确定禁用的选中的用户？', {icon: 3, title: '提示信息'}, function (index) {
-                                $.ajax({
-                                    url: '/manage/forbidWorkUsers',
-                                    type: 'PUT',
-                                    data: {
-                                        workUserId: workUserIds
-                                    },
-                                    success: function(resultVo) {
-                                        if (resultVo.code === 0) {
-                                            layer.msg(resultVo.msg,{
-                                                icon: 1,
-                                                time: 1000  // 1秒关闭
-                                            }, function (){
-                                                // 一秒以后进行页面重新刷新
-                                                location.reload();
-                                            });
-                                        }else if (resultVo.code === 1) {
-                                            layer.msg(resultVo.msg,{
-                                                icon: 0,
-                                                time: 1000  // 1秒关闭
-                                            }, function (){
-                                                // 一秒以后进行页面重新刷新
-                                                location.reload();
-                                            });
-                                        }else if (resultVo.code === 3) {
-                                            layer.msg(resultVo.msg,{
-                                                icon: 2,
-                                                time: 1000  // 1秒关闭
-                                            }, function (){
-                                                // 一秒以后进行页面重新刷新
-                                                location.reload();
-                                            });
-                                        }
-                                        // tableIns.reload();
-                                        layer.close(index);
-                                    },
-                                    error: function (resultVo) {
-                                        console.log(data)
-                                        layer.msg(resultVo.msg,{
-                                            icon: 1,
-                                            time: 1000,
-                                        },function (){
-                                            location.reload();
-                                        });
-                                        // tableIns.reload();
-                                        layer.close(index);
-                                    }
 
-                                });
-                            })
-                        } else {
-                            layer.msg("请选择需要禁用的用户！");
-                        }
-                    });
-
-                    break;
-                //自定义头工具栏右侧图标 - 提示
-                case 'LAYTABLE_TIPS':
-                    layer.alert('我还没有想好说什么咯！');
-                    break;
-            }
-        });
         // 监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
             //console.log(obj)
-            if (obj.event === 'edit') {
-                // 弹出表单进行修改
-                layer.open({
-                    elem: "#edit-workInfo",
-                    title: "修改工作人员信息",
-                    type: 1,
-                    area: ['660px', '550px'],
-                    content: $('#edit-workInfo').html(),
-
-                    success: function(layero, index) {
-                        // 在打开弹窗之后，手动渲染表单
-                        layui.use(['form'], function() {
-                            var form = layui.form;
-                            form.render();
-                        });
-
-                        form.val('editForm', {
-                            // 赋值
-                            "workUserId": obj.data.workUserId,
-                            "username": obj.data.username,
-                            "workUserRealName": obj.data.workUserRealName,
-                            "workUserSex": obj.data.workUserSex,
-                            "workUserAddress": obj.data.workUserAddress,
-                            "workUserPassword": obj.data.workUserPassword,
-                            "workUserAge": obj.data.workUserAge,
-                            "workUserIdentity": obj.data.workUserIdentity,
-                            "workUserAccountStatus": obj.data.workUserAccountStatus,
-                            "workUserWorkStatus": obj.data.workUserWorkStatus,
-
-                            "workUserJobTime": obj.data.workUserJobTime,
-                            "workUserResignTime": obj.data.workUserResignTime,
-                        });
-                    },
-                    error: function (resultVo) {
-                        layer.alert('添加失败!', {icon: 2});
-                    }
-                });
-            }else if (obj.event === 'forbid') {
+            if (obj.event === 'forbid') {
                 layer.confirm('确定禁用该用户？', {icon: 3, title: '提示信息'}, function(index) {
                     $.ajax({
-                        url: 'manage/forbidWorkUser',
+                        url: 'manage/forbidUser',
                         type: 'PUT',
                         data: {
-                            workUserId: obj.data.workUserId
+                            readerId: obj.data.readerId
                         },
                         success: function(resultVo) {
                             if (resultVo.code === 0) {
@@ -484,10 +149,10 @@
             } else if (obj.event === 'active') {
                 layer.confirm('确定启用该用户？', {icon: 3, title: '提示信息'}, function(index) {
                     $.ajax({
-                        url: 'manage/activeWorkUser',
+                        url: 'manage/activeUser',
                         type: 'PUT',
                         data: {
-                            workUserId: obj.data.workUserId
+                            readerId: obj.data.readerId
                         },
                         success: function(resultVo) {
                             if (resultVo.code === 0) {
@@ -530,78 +195,7 @@
                 });
             }
         });
-        // 监听提交事件
-        form.on('submit(addForm)', function (data) {
-            $.post("manage/addWorkUserInfo", data.field, function (resultVo) {
-                if (resultVo.code === 0) {
-                    layer.msg(resultVo.msg,{
-                        icon: 1,
-                        time: 1000  // 1秒关闭
-                    }, function (){
-                        // 一秒以后进行页面重新刷新
-                        location.reload();
-                    });
-                }else if (resultVo.code === 1) {
-                    layer.msg(resultVo.msg,{
-                        icon: 0,
-                        time: 1000  // 1秒关闭
-                    }, function (){
-                        // 一秒以后进行页面重新刷新
-                        location.reload();
-                    });
-                }else if (resultVo.code === 3) {
-                    layer.msg(resultVo.msg,{
-                        icon: 2,
-                        time: 1000  // 1秒关闭
-                    }, function (){
-                        // 一秒以后进行页面重新刷新
-                        location.reload();
-                    });
-                }
 
-            }).fail(function() {
-                layer.alert('添加失败!', {icon: 2});
-            });
-            // 阻止form表单提示
-            return false;
-        })
-        // 修改数据
-        form.on('submit(edit-btn-form)', function (data) {
-            $.post("manage/updateWorkUserInfo", data.field, function (resultVo) {
-                if (resultVo.code === 0) {
-                    layer.msg(resultVo.msg,{
-                        icon: 1,
-                        time: 1000  // 1秒关闭
-                    }, function (){
-                        // 一秒以后进行页面重新刷新
-                        location.reload();
-                    });
-                }else if (resultVo.code === 1) {
-                    layer.msg(resultVo.msg,{
-                        icon: 0,
-                        time: 1000  // 1秒关闭
-                    }, function (){
-                        // 一秒以后进行页面重新刷新
-                        location.reload();
-                    });
-                }else if (resultVo.code === 3) {
-                    layer.msg(resultVo.msg,{
-                        icon: 2,
-                        time: 1000  // 1秒关闭
-                    }, function (){
-                        // 一秒以后进行页面重新刷新
-                        location.reload();
-                    });
-                }
-
-                layer.close(index);
-
-            }).fail(function() {
-                layer.alert('添加失败!', {icon: 2});
-            });
-            // 阻止form表单提示
-            return false;
-        })
         // 修改密码
         form.on('submit(updatePassword)', function (data) {
             $.post("manage/updateworkUserSecret", data.field, function (resultVo) {

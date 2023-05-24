@@ -2,9 +2,13 @@ package com.it.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.it.dao.BookInfoDao;
+import com.it.dao.ReaderInfoDao;
 import com.it.dao.UserDao;
+import com.it.dao.WorkUserDao;
 import com.it.domain.BookInfo;
+import com.it.domain.ReaderInfo;
 import com.it.domain.User;
+import com.it.domain.WorkUser;
 import com.it.service.DataStatisticsService;
 import com.it.statistics.DataItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,11 @@ import java.util.List;
  */
 @Service
 public class DataStatisticsServiceImpl implements DataStatisticsService {
+
+    @Autowired
+    private ReaderInfoDao readerInfoDao;
+    @Autowired
+    private WorkUserDao workUserDao;
 
     @Autowired
     private BookInfoDao bookInfoDao;
@@ -83,6 +92,30 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
 
             list.add(new DataItem(count.intValue(), bookInfo.getBookCategory()));
         }
+
+        return list;
+    }
+
+    public List<DataItem> dataStatistic() {
+
+
+        // 创建条件构造器
+        LambdaQueryWrapper<ReaderInfo> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        // 将图书种类分类
+        lambdaQueryWrapper.eq(ReaderInfo::getStatus, "启用");
+        // 查询分类
+        Integer readerCount = Math.toIntExact(readerInfoDao.selectCount(lambdaQueryWrapper));
+
+        LambdaQueryWrapper<WorkUser> workUserLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        // 将图书种类分类
+        workUserLambdaQueryWrapper.eq(WorkUser::getWorkUserAccountStatus, "启用");
+        Integer workCount = Math.toIntExact(workUserDao.selectCount(workUserLambdaQueryWrapper));
+
+        List<DataItem> list = new ArrayList<>();
+
+        list.add(new DataItem(readerCount, "用户数"));
+        list.add(new DataItem(workCount, "员工数"));
+        list.add(new DataItem(3201, "访问量"));
 
         return list;
     }

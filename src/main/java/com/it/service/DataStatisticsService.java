@@ -17,4 +17,7 @@ public interface DataStatisticsService {
 
     // 图书信息差统计
     public List<DataItem> statistic();
+
+    // 图书信息差统计
+    public List<DataItem> dataStatistic();
 }

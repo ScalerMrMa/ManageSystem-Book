@@ -18,5 +18,5 @@ public class ReaderInfo {
     private String gender;              // 性别
     private Date birthday;              // 生日
     private Date registrationDate;      // 登记日期
-
+    private String status;              // 账户状态
 }

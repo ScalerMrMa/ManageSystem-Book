@@ -50,6 +50,9 @@ public class LogController {
             if (checkUser.getIdentity().equals("管理员")) {
                 httpSession.setAttribute("email", email);
                 return "adminHomePage";
+            }else if (checkUser.getIdentity().equals("图书管理员")) {
+                httpSession.setAttribute("email", email);
+                return "librarian";
             }else {
                 httpSession.setAttribute("email", email);
                 return "userHomePage";

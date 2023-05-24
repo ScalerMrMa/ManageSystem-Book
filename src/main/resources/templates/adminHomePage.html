@@ -45,25 +45,26 @@
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
                 <li class="layui-nav-item">
                     <!--通过target和iframe的name实现页面跳转-->
-                    <a th:href="@{/homepage}" target="main_self_frame">首页</a>
+                    <a th:href="@{/adminhomepage}" target="main_self_frame">首页</a>
                 </li>
 
-                <li class="layui-nav-item layui-nav-itemed">
-                    <a href="javascript:;">图书信息管理</a>
-                    <dl class="layui-nav-child">
-                        <dd><a th:href="@{/bookInfoManage}" target="main_self_frame">书籍管理</a></dd>
-                        <dd><a th:href="@{/bookCategory}" target="main_self_frame">分类管理</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">图书借阅管理</a>
-                    <dl class="layui-nav-child">
-                        <dd><a th:href="@{/borrowInfoSearch}" target="main_self_frame">借阅信息查询</a></dd>
-                        <dd><a th:href="@{/borrowRuleManage}" target="main_self_frame">借阅规则管理</a></dd>
-                    </dl>
-                </li>
+<!--                <li class="layui-nav-item layui-nav-itemed">-->
+<!--                    <a href="javascript:;">图书信息管理</a>-->
+<!--                    <dl class="layui-nav-child">-->
+<!--                        <dd><a th:href="@{/bookInfoManage}" target="main_self_frame">书籍管理</a></dd>-->
+<!--                        <dd><a th:href="@{/bookCategory}" target="main_self_frame">分类管理</a></dd>-->
+<!--                    </dl>-->
+<!--                </li>-->
+<!--                <li class="layui-nav-item">-->
+<!--                    <a href="javascript:;">图书借阅管理</a>-->
+<!--                    <dl class="layui-nav-child">-->
+<!--                        <dd><a th:href="@{/borrowInfoSearch}" target="main_self_frame">借阅信息查询</a></dd>-->
+<!--                        <dd><a th:href="@{/borrowRuleManage}" target="main_self_frame">借阅规则管理</a></dd>-->
+<!--                    </dl>-->
+<!--                </li>-->
+                <li class="layui-nav-item"><a th:href="@{/userManage}" target="main_self_frame">用户查询</a></li>
                 <li class="layui-nav-item"><a th:href="@{/workUserManage}" target="main_self_frame">图书管理员查询</a></li>
-                <li class="layui-nav-item"><a th:href="@{/borrowInfoSearch}" target="main_self_frame">图书信息统计</a></li>
+<!--                <li class="layui-nav-item"><a th:href="@{/borrowInfoSearch}" target="main_self_frame">图书信息统计</a></li>-->
                 <li class="layui-nav-item"><a th:href="@{/announcement}" target="main_self_frame">公告模块管理</a></li>
             </ul>
         </div>

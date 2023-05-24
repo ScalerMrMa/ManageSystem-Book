@@ -25,6 +25,9 @@ import java.util.Map;
 public class ManageController {
 
     @Autowired
+    UserService userService;
+
+    @Autowired
     DataStatisticsService dataStatisticsService;
 
     @Autowired
@@ -102,6 +105,10 @@ public class ManageController {
     @ResponseBody
     public DataVo<WorkUser> getWorkUsers(String workUserName) {
         return workUserService.getWorkUsers(workUserName);
+    }@GetMapping("/getAllUsers")
+    @ResponseBody
+    public DataVo<ReaderInfo> getAllUsers(String workUserName) {
+        return userService.getWorkUsers(workUserName);
     }
     //------------------------------------添加功能---------------------------------------------
 
@@ -276,6 +283,7 @@ public class ManageController {
         return workUserService.forbidWorkUsers(workUserIds);
     }
 
+
     /**
      * 激活用户
      * @param workUserId
@@ -287,6 +295,12 @@ public class ManageController {
 
         return workUserService.activeWorkUser(workUserId);
     }
+    @RequestMapping("/activeUser")
+    @ResponseBody
+    public ResultVo activeUser(@RequestParam("readerId") String readerId) {
+
+        return userService.activeUser(readerId);
+    }
     /**
      * 禁用用户
      * @param workUserId
@@ -296,6 +310,11 @@ public class ManageController {
     @ResponseBody
     public ResultVo forbidWorkUser(@RequestParam("workUserId") String workUserId) {
         return workUserService.forbidWorkUser(workUserId);
+    }
+    @RequestMapping("/forbidUser")
+    @ResponseBody
+    public ResultVo forbidUser(@RequestParam("readerId") String readerId) {
+        return userService.forbidUser(readerId);
     }
     // ------------------------------------修改专区---------------------------------------
 
@@ -344,6 +363,8 @@ public class ManageController {
         return workUserService.updateWorkUserInfo(workUser);
     }
 
+
+
     //  -------------------------------------------数据展示专区----------------------------------
 
     /**
@@ -356,6 +377,15 @@ public class ManageController {
         Map<String, List<DataItem>> response = new HashMap<>();
         System.out.println(response);
         List<DataItem> source = dataStatisticsService.statistic();
+        response.put("dataset", source);
+        return response;
+    }
+    @RequestMapping("/aCharting")
+    @ResponseBody
+    public Map<String, List<DataItem>> aViewData() {
+        Map<String, List<DataItem>> response = new HashMap<>();
+        System.out.println(response);
+        List<DataItem> source = dataStatisticsService.dataStatistic();
         response.put("dataset", source);
         return response;
     }
